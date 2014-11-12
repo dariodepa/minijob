@@ -1,0 +1,234 @@
+
+/* Class = "IBUILabel"; text = "data scadenza:"; ObjectID = "0Yk-BY-qS4"; */
+"0Yk-BY-qS4.text" = "data scadenza:";
+
+/* Class = "IBUILabel"; text = "città - distanza"; ObjectID = "0zI-N0-x6h"; */
+"0zI-N0-x6h.text" = "città - distanza";
+
+/* Class = "IBUILabel"; text = "stato: aperto"; ObjectID = "1AS-H2-LrU"; */
+"1AS-H2-LrU.text" = "stato: aperto";
+
+/* Class = "IBUIButton"; normalTitle = "LOGIN"; ObjectID = "1Ws-lJ-1Ba"; */
+"1Ws-lJ-1Ba.normalTitle" = "LOGIN";
+
+/* Class = "IBUIButton"; normalTitle = "FACEBOOK"; ObjectID = "1Xi-9x-aQg"; */
+"1Xi-9x-aQg.normalTitle" = "FACEBOOK";
+
+/* Class = "IBUILabel"; text = "messaggio......."; ObjectID = "1b2-Yd-GSa"; */
+"1b2-Yd-GSa.text" = "messaggio.......";
+
+/* Class = "IBUILabel"; text = "descrizione"; ObjectID = "27W-4M-8vY"; */
+"27W-4M-8vY.text" = "descrizione";
+
+/* Class = "IBUILabel"; text = "Aggiungi un mestiere"; ObjectID = "4hQ-XJ-6FS"; */
+"4hQ-XJ-6FS.text" = "Aggiungi un mestiere";
+
+/* Class = "IBUILabel"; text = "Categoria"; ObjectID = "4y2-0T-0NN"; */
+"4y2-0T-0NN.text" = "Categoria";
+
+/* Class = "IBUILabel"; text = "Disponibile nei gg: lun, mar, mer, gio, ven"; ObjectID = "5V8-fN-mB8"; */
+"5V8-fN-mB8.text" = "Disponibile nei gg: lun, mar, mer, gio, ven";
+
+/* Class = "IBUILabel"; text = "Annuncio 3:"; ObjectID = "5Xt-fM-8Uo"; */
+"5Xt-fM-8Uo.text" = "Annuncio 3:";
+
+/* Class = "IBUILabel"; text = "messaggio......."; ObjectID = "5pa-1G-m6R"; */
+"5pa-1G-m6R.text" = "messaggio.......";
+
+/* Class = "IBUILabel"; text = "08:22"; ObjectID = "5tV-JM-Seh"; */
+"5tV-JM-Seh.text" = "08:22";
+
+/* Class = "IBUINavigationController"; title = "Home"; ObjectID = "60f-K0-2B9"; */
+"60f-K0-2B9.title" = "Home";
+
+/* Class = "IBUILabel"; text = "08:25"; ObjectID = "6En-u8-SyG"; */
+"6En-u8-SyG.text" = "08:25";
+
+/* Class = "IBUILabel"; text = "nome jobber2"; ObjectID = "9sD-Iy-NPk"; */
+"9sD-Iy-NPk.text" = "nome jobber2";
+
+/* Class = "IBUILabel"; text = "Cerca un jobber"; ObjectID = "AEz-MW-S6x"; */
+"AEz-MW-S6x.text" = "Cerca un jobber";
+
+/* Class = "IBUILabel"; text = "TITOLO:"; ObjectID = "Ad3-8E-kh4"; */
+"Ad3-8E-kh4.text" = "TITOLO:";
+
+/* Class = "IBUILabel"; text = "nome jobber"; ObjectID = "C8B-Js-Toy"; */
+"C8B-Js-Toy.text" = "nome jobber";
+
+/* Class = "IBUILabel"; text = "08:28"; ObjectID = "CF9-IW-K8e"; */
+"CF9-IW-K8e.text" = "08:28";
+
+/* Class = "IBUILabel"; text = "tariffa: ora/giorno/prestazione"; ObjectID = "CFQ-EF-oTq"; */
+"CFQ-EF-oTq.text" = "tariffa: ora/giorno/prestazione";
+
+/* Class = "IBUILabel"; text = "Label"; ObjectID = "DdR-Eh-QrE"; */
+"DdR-Eh-QrE.text" = "Label";
+
+/* Class = "IBUILabel"; text = "foto lavori"; ObjectID = "EZF-re-HM0"; */
+"EZF-re-HM0.text" = "foto lavori";
+
+/* Class = "IBUILabel"; text = "cognome:"; ObjectID = "EbX-k4-JTK"; */
+"EbX-k4-JTK.text" = "cognome:";
+
+/* Class = "IBUILabel"; text = "Allegati - foto"; ObjectID = "FcO-wx-EST"; */
+"FcO-wx-EST.text" = "Allegati - foto";
+
+/* Class = "IBUILabel"; text = "Mestiere 2"; ObjectID = "GZ2-so-heO"; */
+"GZ2-so-heO.text" = "Mestiere 2";
+
+/* Class = "IBUILabel"; text = "Budget:"; ObjectID = "H2Z-P4-wka"; */
+"H2Z-P4-wka.text" = "Budget:";
+
+/* Class = "IBUILabel"; text = "Annuncio 1:"; ObjectID = "IjO-I3-BSZ"; */
+"IjO-I3-BSZ.text" = "Annuncio 1:";
+
+/* Class = "IBUILabel"; text = "nome:"; ObjectID = "LAc-mb-Tnq"; */
+"LAc-mb-Tnq.text" = "nome:";
+
+/* Class = "IBUILabel"; text = "Richieste: 12"; ObjectID = "LZI-Co-oMv"; */
+"LZI-Co-oMv.text" = "Richieste: 12";
+
+/* Class = "IBUILabel"; text = "massimo 50 caratteri"; ObjectID = "Llv-zG-eqc"; */
+"Llv-zG-eqc.text" = "massimo 50 caratteri";
+
+/* Class = "IBUILabel"; text = "interessato: si"; ObjectID = "LoY-4Z-b1s"; */
+"LoY-4Z-b1s.text" = "interessato: si";
+
+/* Class = "IBUILabel"; text = "richiesta 1: inviata a 100 jobber vicino a Lecce, hanno risposto in 15"; ObjectID = "MzZ-MG-WgO"; */
+"MzZ-MG-WgO.text" = "richiesta 1: inviata a 100 jobber vicino a Lecce, hanno risposto in 15";
+
+/* Class = "IBUILabel"; text = "1238 jobber iscritti elenco"; ObjectID = "NeJ-eV-4hy"; */
+"NeJ-eV-4hy.text" = "1238 jobber iscritti elenco";
+
+/* Class = "IBUILabel"; text = "Nome Utente"; ObjectID = "Nfq-Jo-DRD"; */
+"Nfq-Jo-DRD.text" = "Nome Utente";
+
+/* Class = "IBUILabel"; text = "Data inizio...fine"; ObjectID = "Ozg-S9-oXA"; */
+"Ozg-S9-oXA.text" = "Data inizio...fine";
+
+/* Class = "IBUILabel"; text = "Onorario: 12€"; ObjectID = "SYJ-vD-tWT"; */
+"SYJ-vD-tWT.text" = "Onorario: 12€";
+
+/* Class = "IBUILabel"; text = "messaggio di risposta mio......."; ObjectID = "UgY-UE-doZ"; */
+"UgY-UE-doZ.text" = "messaggio di risposta mio.......";
+
+/* Class = "IBUILabel"; text = "messaggio......."; ObjectID = "Vg6-An-BYN"; */
+"Vg6-An-BYN.text" = "messaggio.......";
+
+/* Class = "IBUILabel"; text = "telefono:"; ObjectID = "WY2-SM-ddg"; */
+"WY2-SM-ddg.text" = "telefono:";
+
+/* Class = "IBUILabel"; text = "Annuncio 2:"; ObjectID = "YWb-50-79j"; */
+"YWb-50-79j.text" = "Annuncio 2:";
+
+/* Class = "IBUIBarButtonItem"; title = "PUBBLICA"; ObjectID = "YXG-bL-Zxe"; */
+"YXG-bL-Zxe.title" = "PUBBLICA";
+
+/* Class = "IBUILabel"; text = "commenti: 23 - rating: 4,75"; ObjectID = "YlD-Dw-12H"; */
+"YlD-Dw-12H.text" = "commenti: 23 - rating: 4,75";
+
+/* Class = "IBUILabel"; text = "12 maggio 2014"; ObjectID = "aU8-f5-26G"; */
+"aU8-f5-26G.text" = "12 maggio 2014";
+
+/* Class = "IBUILabel"; text = "filtra o ordina per data, città, nrisposte, ecc"; ObjectID = "b3g-SE-dqp"; */
+"b3g-SE-dqp.text" = "filtra o ordina per data, città, nrisposte, ecc";
+
+/* Class = "IBUILabel"; text = "Mestiere 3"; ObjectID = "bpU-19-OKv"; */
+"bpU-19-OKv.text" = "Mestiere 3";
+
+/* Class = "IBUILabel"; text = "nome jobber1"; ObjectID = "byw-L0-wft"; */
+"byw-L0-wft.text" = "nome jobber1";
+
+/* Class = "IBUILabel"; text = "Descrizione"; ObjectID = "cEE-iZ-mpc"; */
+"cEE-iZ-mpc.text" = "Descrizione";
+
+/* Class = "IBUILabel"; text = "34896 richieste di lavoro elenco"; ObjectID = "d6i-CF-B3s"; */
+"d6i-CF-B3s.text" = "34896 richieste di lavoro elenco";
+
+/* Class = "IBUILabel"; text = "Mestiere 1"; ObjectID = "dHL-AB-iGu"; */
+"dHL-AB-iGu.text" = "Mestiere 1";
+
+/* Class = "IBUILabel"; text = "Profilo"; ObjectID = "eT6-B5-QuE"; */
+"eT6-B5-QuE.text" = "Profilo";
+
+/* Class = "IBUILabel"; text = "ex. babysitter,pulizie, ripetizioni,  "; ObjectID = "fBn-Xd-rKY"; */
+"fBn-Xd-rKY.text" = "ex. babysitter,pulizie, ripetizioni,  ";
+
+/* Class = "IBUILabel"; text = "Profilo:"; ObjectID = "gHB-4k-Lcx"; */
+"gHB-4k-Lcx.text" = "Profilo:";
+
+/* Class = "IBUILabel"; text = "username:"; ObjectID = "i4S-dT-CE7"; */
+"i4S-dT-CE7.text" = "username:";
+
+/* Class = "IBUILabel"; text = "Annuncio 4:"; ObjectID = "ijE-H2-YF3"; */
+"ijE-H2-YF3.text" = "Annuncio 4:";
+
+/* Class = "IBUILabel"; text = "Ora: dalle 15:00 alle 19:00"; ObjectID = "j6T-vb-ACC"; */
+"j6T-vb-ACC.text" = "Ora: dalle 15:00 alle 19:00";
+
+/* Class = "IBUILabel"; text = "nuovo messaggio da pippo"; ObjectID = "jBS-0a-crS"; */
+"jBS-0a-crS.text" = "nuovo messaggio da pippo";
+
+/* Class = "IBUILabel"; text = "Aggiungi Città"; ObjectID = "jMs-vL-Jcz"; */
+"jMs-vL-Jcz.text" = "Aggiungi Città";
+
+/* Class = "IBUILabel"; text = "Festivi esclusi"; ObjectID = "jPp-Ek-Ayn"; */
+"jPp-Ek-Ayn.text" = "Festivi esclusi";
+
+/* Class = "IBUILabel"; text = "tag"; ObjectID = "kg5-VS-sNK"; */
+"kg5-VS-sNK.text" = "tag";
+
+/* Class = "IBUILabel"; text = "09:02"; ObjectID = "kuX-JX-02K"; */
+"kuX-JX-02K.text" = "09:02";
+
+/* Class = "IBUILabel"; text = "Titolo annuncio"; ObjectID = "kza-Bc-QLJ"; */
+"kza-Bc-QLJ.text" = "Titolo annuncio";
+
+/* Class = "IBUILabel"; text = "Scegli il mestiere"; ObjectID = "mqf-re-vmK"; */
+"mqf-re-vmK.text" = "Scegli il mestiere";
+
+/* Class = "IBUILabel"; text = "Le mie ricerche di lavoratori"; ObjectID = "nEk-KB-4t1"; */
+"nEk-KB-4t1.text" = "Le mie ricerche di lavoratori";
+
+/* Class = "IBUILabel"; text = "Città"; ObjectID = "oU8-Np-22h"; */
+"oU8-Np-22h.text" = "Città";
+
+/* Class = "IBUILabel"; text = "inviato a 100 persone vicino a città risposte:15"; ObjectID = "paP-rL-F2N"; */
+"paP-rL-F2N.text" = "inviato a 100 persone vicino a città risposte:15";
+
+/* Class = "IBUITextView"; text = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda."; ObjectID = "qOp-Yc-WmS"; */
+"qOp-Yc-WmS.text" = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.";
+
+/* Class = "IBUILabel"; text = "password:"; ObjectID = "r1h-dd-e9U"; */
+"r1h-dd-e9U.text" = "password:";
+
+/* Class = "IBUILabel"; text = "Le mie richieste di lavoro"; ObjectID = "r72-Wc-hDP"; */
+"r72-Wc-hDP.text" = "Le mie richieste di lavoro";
+
+/* Class = "IBUILabel"; text = "Inserisci un breve titolo per il tuo annuncio, che riassuma in un rigo la tua OFFERTA di lavoro."; ObjectID = "rkK-uw-dAH"; */
+"rkK-uw-dAH.text" = "Inserisci un breve titolo per il tuo annuncio, che riassuma in un rigo la tua OFFERTA di lavoro.";
+
+/* Class = "IBUILabel"; text = "Aggiungi un competenza"; ObjectID = "rrE-ZA-0au"; */
+"rrE-ZA-0au.text" = "Aggiungi un competenza";
+
+/* Class = "IBUILabel"; text = "email:"; ObjectID = "tpZ-Tp-w19"; */
+"tpZ-Tp-w19.text" = "email:";
+
+/* Class = "IBUILabel"; text = "Label"; ObjectID = "uwa-4q-5fw"; */
+"uwa-4q-5fw.text" = "Label";
+
+/* Class = "IBUIButton"; normalTitle = "REGISTRATI"; ObjectID = "vAc-ap-Xdl"; */
+"vAc-ap-Xdl.normalTitle" = "REGISTRATI";
+
+/* Class = "IBUILabel"; text = "Label"; ObjectID = "wFd-Xl-ih5"; */
+"wFd-Xl-ih5.text" = "Label";
+
+/* Class = "IBUILabel"; text = "stato: aperto"; ObjectID = "yXQ-XU-huR"; */
+"yXQ-XU-huR.text" = "stato: aperto";
+
+/* Class = "IBUILabel"; text = "Crea nuovo annuncio"; ObjectID = "ydg-yR-AOI"; */
+"ydg-yR-AOI.text" = "Crea nuovo annuncio";
+
+/* Class = "IBUILabel"; text = "risposto: si"; ObjectID = "yyi-ao-wYn"; */
+"yyi-ao-wYn.text" = "risposto: si";

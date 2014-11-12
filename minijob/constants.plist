@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>SESSION_TOKEN</key>
+	<string>sessionToken</string>
+	<key>LOCATION_LAT_KEY</key>
+	<string>searchLocationLat</string>
+	<key>LOCATION_LON_KEY</key>
+	<string>searchLocationLon</string>
+	<key>LAST_MY_POSITION</key>
+	<string>lastMyPosition</string>
+	<key>LAST_LOADED_CATEGORIES</key>
+	<string>lastLoadedCategories</string>
+	<key>LAST_SELECTED_CATEGORY_KEY</key>
+	<string>mainListSelectedCategory</string>
+	<key>TITLE_MIN_CHAR_LIMIT</key>
+	<integer>5</integer>
+	<key>TITLE_MAX_CHAR_LIMIT</key>
+	<integer>50</integer>
+	<key>DESCRIPTION_MIN_CHAR_LIMIT</key>
+	<integer>5</integer>
+	<key>DESCRIPTION_MAX_CHAR_LIMIT</key>
+	<integer>250</integer>
+	<key>RADIUS_POINT</key>
+	<integer>80</integer>
+	<key>cellJobAdMarginLabelTop</key>
+	<integer>50</integer>
+	<key>cellJobAdMarginLabelBottom</key>
+	<integer>20</integer>
+	<key>USER_PROFILE</key>
+	<string>userProfile</string>
+	<key>KEY_GOOGLE_MAP</key>
+	<string>AIzaSyCUj4kGjW7_vW1wsGV2Fx_owE3h2ivmt78</string>
+	<key>LAST_CITY_OID_SELECTED</key>
+	<string>lastCityOidSelected</string>
+	<key>LAST_CITY_DESCRIPTION_SELECTED</key>
+	<string>lastCityDescriptionSelected</string>
+	<key>LAST_CITY_REFERENCE_SELECTED</key>
+	<string>lastCityReferenceSelected</string>
+	<key>URL_GOOGLE_AUTOCOMPLETE</key>
+	<string>https://maps.googleapis.com/maps/api/place/autocomplete/json?input=%@&amp;sensor=true&amp;key=%@&amp;location=%f,%f&amp;radius=%f&amp;language=%@</string>
+	<key>URL_GOOGLE_REFERENCE</key>
+	<string>https://maps.googleapis.com/maps/api/place/details/json?reference=%@&amp;sensor=true&amp;key=%@</string>
+	<key>NAME_IMAGE_PROFILE</key>
+	<string>imageProfile.png</string>
+	<key>KEY_IMAGE_PROFILE</key>
+	<string>image</string>
+	<key>CELL_IDENTIFIER_CITY</key>
+	<string>city</string>
+	<key>CELL_IDENTIFIER_ADS</key>
+	<string>ads</string>
+	<key>CELL_IDENTIFIER_SKILLS</key>
+	<string>skills</string>
+	<key>HELP_MESSAGE_RADIUS</key>
+	<string>Inserisci la distanza da %@ entro la quale sei disponibile ad offrire le tue competenze</string>
+	<key>HELP_MESSAGE_NAME</key>
+	<string>Inserisci il tuo nome di battesimo o lo pseudonimo con il quale sei conosciuto</string>
+	<key>HELP_MESSAGE_SURNAME</key>
+	<string>Inserisci il tuo cognome!</string>
+	<key>HELP_MESSAGE_EMAIL</key>
+	<string>Inserisci una mail valida per poter essere facilmente contattato</string>
+	<key>HELP_MESSAGE_TELEPHONE</key>
+	<string>Inserisci un recapito telefonico per poter essere facilmente contattato</string>
+	<key>ARRAY_PRELOAD</key>
+	<array>
+		<string>LAST_LOADED_CATEGORIES</string>
+		<string>MY_POSITION</string>
+	</array>
+</dict>
+</plist>
