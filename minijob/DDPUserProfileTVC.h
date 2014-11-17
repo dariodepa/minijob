@@ -27,6 +27,8 @@
 
 @property (weak, nonatomic) IBOutlet UIImageView *photoProfile;
 @property (weak, nonatomic) IBOutlet UILabel *labelName;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *labelAddJob;
 
+- (IBAction)actionGoToAddSkill:(id)sender;
 - (IBAction)returnToUserProfile:(UIStoryboardSegue*)sender;
 @end

@@ -13,7 +13,7 @@
 #import "DDPCity.h"
 #import "DDPHomeMySkillsTVC.h"
 #import "DDPOptionUserTVC.h"
-
+#import "DDPConstants.h"
 @interface DDPAddCityTVC ()
 @end
 
@@ -66,40 +66,44 @@
 
 
 -(void)initMap{
-    
     self.mapController.applicationContext = self.applicationContext;
-    
-    NSString *KEY_GOOGLE_MAP = [self.applicationContext.constantsPlist valueForKey:@"KEY_GOOGLE_MAP"];
-    self.mapController.googleMapKey = KEY_GOOGLE_MAP;
-    if(!self.applicationContext.lastLocation){
+    if([[PFUser currentUser] valueForKey:@"position"]){
+        PFGeoPoint *position = (PFGeoPoint *)[[PFUser currentUser] valueForKey:@"position"];
+        self.mapController.latitude = position.latitude;
+        self.mapController.longitude = position.longitude;
+        CLLocation *location = [[CLLocation alloc] initWithLatitude:position.latitude longitude:position.longitude];
+        self.labelMyCity.text = [[PFUser currentUser] valueForKey:@"city"];
+        self.mapView = [self.mapController addPointAnnotation:self.mapView location:location];
+    }else if([self.applicationContext getVariable:CURRENT_POSITION]){
+        CLLocation *position = (CLLocation *)[self.applicationContext getVariable:CURRENT_POSITION];
+        self.mapController.latitude = position.coordinate.latitude;
+        self.mapController.longitude = position.coordinate.longitude;
+        self.labelMyCity.text = (NSString *)[self.applicationContext getVariable:CURRENT_CITY];
+        self.mapView = [self.mapController addPointAnnotation:self.mapView location:position];
+    }else{
         self.mapController.latitude = 40.1783288;
         self.mapController.longitude = 18.1806903;
-        [self.mapController getGeoPoint];
-    }else{
-        self.mapController.latitude = self.applicationContext.lastLocation.coordinate.latitude;
-        self.mapController.longitude = self.applicationContext.lastLocation.coordinate.longitude;
     }
     self.mapController.radius=[[self.applicationContext.constantsPlist valueForKey:@"RADIUS_POINT"] floatValue];
-    self.mapController.language = [NSString stringWithFormat:@"%@_%@", [[NSLocale preferredLanguages] objectAtIndex:0], [[NSLocale currentLocale] objectForKey: NSLocaleCountryCode]];
+    self.mapController.language = [NSString stringWithFormat:@"%@", [[NSLocale preferredLanguages] objectAtIndex:0]];
 }
 
 
-
--(void)initSelectedCity{
-    NSString *LAST_CITY_OID_SELECTED = [self.applicationContext.constantsPlist valueForKey:@"LAST_CITY_OID_SELECTED"];
-    NSString *LAST_CITY_DESCRIPTION_SELECTED = [self.applicationContext.constantsPlist valueForKey:@"LAST_CITY_DESCRIPTION_SELECTED"];
-    NSString *LAST_CITY_REFERENCE_SELECTED = [self.applicationContext.constantsPlist valueForKey:@"LAST_CITY_REFERENCE_SELECTED"];
-    if(!self.applicationContext.citySelected){
-        NSString *lastCityOid = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_CITY_OID_SELECTED];
-        if (lastCityOid) {
-            citySelected.oid = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_CITY_OID_SELECTED];
-            citySelected.description =[[NSUserDefaults standardUserDefaults] objectForKey:LAST_CITY_DESCRIPTION_SELECTED];
-            citySelected.reference =[[NSUserDefaults standardUserDefaults] objectForKey:LAST_CITY_REFERENCE_SELECTED];
-            self.applicationContext.citySelected = citySelected;
-            [self.mapController addPlacemarkAnnotationToMap:self.applicationContext.citySelected.description mapView:self.mapView];
-        }
-    }
-}
+//-(void)initSelectedCity{
+//    NSString *LAST_CITY_OID_SELECTED = [self.applicationContext.constantsPlist valueForKey:@"LAST_CITY_OID_SELECTED"];
+//    NSString *LAST_CITY_DESCRIPTION_SELECTED = [self.applicationContext.constantsPlist valueForKey:@"LAST_CITY_DESCRIPTION_SELECTED"];
+//    NSString *LAST_CITY_REFERENCE_SELECTED = [self.applicationContext.constantsPlist valueForKey:@"LAST_CITY_REFERENCE_SELECTED"];
+//    if(!self.applicationContext.citySelected){
+//        NSString *lastCityOid = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_CITY_OID_SELECTED];
+//        if (lastCityOid) {
+//            citySelected.oid = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_CITY_OID_SELECTED];
+//            citySelected.cityDescription =[[NSUserDefaults standardUserDefaults] objectForKey:LAST_CITY_DESCRIPTION_SELECTED];
+//            citySelected.reference =[[NSUserDefaults standardUserDefaults] objectForKey:LAST_CITY_REFERENCE_SELECTED];
+//            self.applicationContext.citySelected = citySelected;
+//            [self.mapController addPlacemarkAnnotationToMap:self.applicationContext.citySelected.description mapView:self.mapView];
+//        }
+//    }
+//}
 
 -(void)initMyCity{
     if([[PFUser currentUser] objectForKey:@"city"]){
@@ -154,6 +158,7 @@
 
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+     NSLog(@"----------------- CITY textDidChange: %@",searchText);
     [self.mapController fetchPlaceDetail:(NSString *)searchText];
 }
 
@@ -163,6 +168,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+     NSLog(@"------------------------ numberOfRowsInSection: %d",(int)self.arraySearch.count);
     return self.arraySearch.count;
 }
 
@@ -188,7 +194,7 @@
 -(void)setCitySelected:(PFObject *)cityObject{
     //NSLog(@"----------------- CITY SELECTED: %@",cityObject);
     citySelected.oid = [cityObject objectForKey:@"id"];
-    citySelected.description = [cityObject objectForKey:@"description"];
+    citySelected.cityDescription = [cityObject objectForKey:@"description"];
     citySelected.reference = [cityObject objectForKey:@"reference"];
     self.applicationContext.citySelected = citySelected;
     [self saveCityInUserDefault];

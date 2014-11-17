@@ -9,6 +9,9 @@
 #import "DDPAuthenticationVC.h"
 #import "DDPLoginVC.h"
 #import "DDPSigInTVC.h"
+#import "DDPImage.h"
+#import "DDPAppDelegate.h"
+#import "DDPApplicationContext.h"
 
 @interface DDPAuthenticationVC ()
 @end
@@ -21,6 +24,12 @@ static NSString *SESSION_TOKEN = @"sessionToken";
 {
     [super viewDidLoad];
     NSLog(@"SubclassConfigViewController");
+    if(!self.applicationContext){
+        DDPAppDelegate *appDelegate = (DDPAppDelegate *)[[UIApplication sharedApplication] delegate];
+        self.applicationContext = appDelegate.applicationContext;
+    }
+
+    imageTool = [[DDPImage alloc] init];
     [self initialize];
 }
 
@@ -129,15 +138,44 @@ static NSString *SESSION_TOKEN = @"sessionToken";
                 user[@"name"] = [userDictionary objectForKey:@"first_name"];
                 user[@"surname"] = [userDictionary objectForKey:@"last_name"];
                 user[@"facebookId"] = [userDictionary objectForKey:@"id"];
-                //user[@"position"] = [userDictionary objectForKey:@"position"];
+                user[@"position"] = [userDictionary objectForKey:@"position"];
+                user[@"city"] = @"";
                 user[@"radius"] = @100;
-                //user[@"telephon"] = [userDictionary objectForKey:@"telephone"];
+                user[@"image"] = @"";
+                //carico immagine facebook
+                [self loadImageProfileFB:user[@"facebookId"]];
+                user[@"telephon"] = [userDictionary objectForKey:@"telephone"];
                 [user saveEventually];
                 //[user save];
             }
         }];
     }
 }
+
+
+-(void)loadImageProfileFB:(NSString *)idFacebook{
+    NSString *urlFB = [[NSString alloc] initWithFormat:@"http://graph.facebook.com/%@/picture?type=large",idFacebook];
+   // NSURL *urlImage = [[NSURL alloc] initWithString:urlFB];
+    NSString *NAME_IMAGE_PROFILE = [self.applicationContext.constantsPlist valueForKey:@"NAME_IMAGE_PROFILE"];
+    NSString *KEY_IMAGE_PROFILE = [self.applicationContext.constantsPlist valueForKey:@"KEY_IMAGE_PROFILE"];
+    
+    //get a dispatch queue
+    dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    //this will start the image loading in bg
+    dispatch_async(concurrentQueue, ^{
+        NSURL *imageURL = [NSURL URLWithString:urlFB];
+        NSData *image = [[NSData alloc] initWithContentsOfURL:imageURL];
+        //this will set the image when loading is finished
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [imageTool saveImageWithoutDelegate:[UIImage imageWithData:image] nameImage:NAME_IMAGE_PROFILE key:KEY_IMAGE_PROFILE];
+            NSLog(@"loaded image profile facebook");
+        });
+    });
+    
+}
+
+
+
 
 -(void)saveSessionToken{
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];

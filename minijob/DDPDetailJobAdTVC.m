@@ -204,7 +204,7 @@
         NSLog(@"load image");
     }else{
         UIImage *image = [UIImage imageNamed:@"noProfile.jpg"];
-        CGSize newSize = CGSizeMake(140,140);
+        CGSize newSize = CGSizeMake(280,280);
         self.photoProfile.image =[DDPImage scaleAndCropImage:image intoSize:newSize];
     }
 }

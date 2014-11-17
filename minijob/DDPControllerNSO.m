@@ -9,6 +9,7 @@
 #import "DDPControllerNSO.h"
 #import "DDPApplicationContext.h"
 #import "DDPAuthenticationVC.h"
+#import "DDPConstants.h"
 
 @implementation DDPControllerNSO
 
@@ -23,7 +24,6 @@
         NSLog(@"toLogin %@",self);
         [self goToAuthentication];
     }
-    //[self goToAuthentication];
 }
 
 -(void)deleteSessionToken:(NSString *)SESSION_TOKEN{
@@ -44,33 +44,9 @@
 //METODI PRELOAD
 //*******************************************************************//
 - (void)checkPreload{
-        NSLog(@"controllPreload");
-        bool preload = 0;
-        NSArray *ARRAY_PRELOAD =  [self.applicationContext.constantsPlist valueForKey:@"ARRAY_PRELOAD"];
-        NSString *LAST_LOADED_CATEGORIES = [self.applicationContext.constantsPlist valueForKey:@"LAST_LOADED_CATEGORIES"];
-        NSString *LAST_MY_POSITION = [self.applicationContext.constantsPlist valueForKey:@"LAST_MY_POSITION"];
-        //NSLog(@"array %@",[self.applicationContext getVariable:LAST_LOADED_CATEGORIES]);
-        
-        for (NSString *keyControll in ARRAY_PRELOAD){
-            if([keyControll isEqualToString:@"LAST_LOADED_CATEGORIES"]){
-                if(![self.applicationContext getVariable:LAST_LOADED_CATEGORIES]){
-                    preload = 1;
-                }else{
-                    NSLog(@"LAST_LOADED_CATEGORIES: %@",[self.applicationContext getVariable:LAST_LOADED_CATEGORIES]);
-                }
-            }
-            else if([keyControll isEqualToString:@"MY_POSITION"]){
-                if(![self.applicationContext getVariable:LAST_MY_POSITION]){
-                    preload = 1;
-                }else{
-                    NSLog(@"LAST_MY_POSITION: %@",[self.applicationContext getVariable:LAST_MY_POSITION]);
-                }
-            }
-            NSLog(@"keyControll: %@, %d",keyControll, preload);
-        }
-        if(preload == 1){
-            [self goToPreload];
-        }
+    if (![self.applicationContext getVariable:LAST_LOADED_CATEGORIES] && ![self.applicationContext getVariable:CURRENT_POSITION]){
+        [self goToPreload];
+    }
 }
 
 -(void)goToPreload{

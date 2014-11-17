@@ -7,9 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "DDPImage.h"
 
-@interface DDPAuthenticationVC : UIViewController
+@class DDPApplicationContext;
 
+@interface DDPAuthenticationVC : UIViewController{
+    DDPImage *imageTool;
+}
+
+@property (strong, nonatomic) DDPApplicationContext *applicationContext;
 @property (assign, nonatomic) UIViewController *caller;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property (weak, nonatomic) IBOutlet UIButton *buttonExit;

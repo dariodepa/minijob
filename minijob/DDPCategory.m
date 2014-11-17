@@ -30,7 +30,7 @@
         } else {
             // Log details of the failure
             NSLog(@"Error: %@ %@", error, [error userInfo]);
-            //[self.delegate alertError:@"noLoadedCategory"];
+            [self.delegate alertError:@"noLoadedCategory"];
         }
     }];
 }

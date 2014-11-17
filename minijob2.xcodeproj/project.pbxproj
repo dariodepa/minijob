@@ -21,6 +21,8 @@
 		DC43E5D51931E49000A0123C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC43E5B71931E49000A0123C /* UIKit.framework */; };
 		DC43E5DF1931E49100A0123C /* minijobTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DC43E5DE1931E49100A0123C /* minijobTests.m */; };
 		DC682820194DE8AA00AE79B7 /* DDPHomeMySkillsTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = DC68281F194DE8AA00AE79B7 /* DDPHomeMySkillsTVC.m */; };
+		DC7CB9E71A17759100B82B93 /* DDPSelectCityVC.m in Sources */ = {isa = PBXBuildFile; fileRef = DC7CB9E61A17759100B82B93 /* DDPSelectCityVC.m */; };
+		DC7CB9EA1A17B1C400B82B93 /* DDPConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = DC7CB9E91A17B1C400B82B93 /* DDPConstants.m */; };
 		DC92FA3219A8C9C4008ECA4B /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = DC92FA3119A8C9C4008ECA4B /* background.png */; };
 		DC92FA3419A8F09C008ECA4B /* bubble@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DC92FA3319A8F09C008ECA4B /* bubble@2x.png */; };
 		DC92FA3619A8F8B4008ECA4B /* bubble_corner.png in Resources */ = {isa = PBXBuildFile; fileRef = DC92FA3519A8F8B4008ECA4B /* bubble_corner.png */; };
@@ -171,6 +173,10 @@
 		DC43E5DE1931E49100A0123C /* minijobTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = minijobTests.m; sourceTree = "<group>"; };
 		DC68281E194DE8AA00AE79B7 /* DDPHomeMySkillsTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDPHomeMySkillsTVC.h; sourceTree = "<group>"; };
 		DC68281F194DE8AA00AE79B7 /* DDPHomeMySkillsTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDPHomeMySkillsTVC.m; sourceTree = "<group>"; };
+		DC7CB9E51A17759100B82B93 /* DDPSelectCityVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDPSelectCityVC.h; sourceTree = "<group>"; };
+		DC7CB9E61A17759100B82B93 /* DDPSelectCityVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDPSelectCityVC.m; sourceTree = "<group>"; };
+		DC7CB9E81A17B1C400B82B93 /* DDPConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDPConstants.h; sourceTree = "<group>"; };
+		DC7CB9E91A17B1C400B82B93 /* DDPConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDPConstants.m; sourceTree = "<group>"; };
 		DC92FA3119A8C9C4008ECA4B /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background.png; sourceTree = "<group>"; };
 		DC92FA3319A8F09C008ECA4B /* bubble@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bubble@2x.png"; sourceTree = "<group>"; };
 		DC92FA3519A8F8B4008ECA4B /* bubble_corner.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bubble_corner.png; sourceTree = "<group>"; };
@@ -544,6 +550,8 @@
 				DCC9D454199761E500BCC68B /* DDPListJobAdsNearMe.m */,
 				DCACCC9B199A14DC004DE80E /* DDPDetailJobAdTVC.h */,
 				DCACCC9C199A14DC004DE80E /* DDPDetailJobAdTVC.m */,
+				DC7CB9E51A17759100B82B93 /* DDPSelectCityVC.h */,
+				DC7CB9E61A17759100B82B93 /* DDPSelectCityVC.m */,
 				DCBB3B2A193F8ACC006551DC /* DDPAddCityTVC.h */,
 				DCBB3B2B193F8ACD006551DC /* DDPAddCityTVC.m */,
 				DCB9CCAD195BED1E00C7C147 /* DDPUplooaderDC.h */,
@@ -590,6 +598,8 @@
 		DCBCDE3F19A6891E0082499C /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				DC7CB9E81A17B1C400B82B93 /* DDPConstants.h */,
+				DC7CB9E91A17B1C400B82B93 /* DDPConstants.m */,
 				DCBCDE4319A7310D0082499C /* DDPChat.h */,
 				DCBCDE4419A7310D0082499C /* DDPChat.m */,
 				DCBDCABD1942E9BF00EEA2BE /* DDPMap.h */,
@@ -844,8 +854,10 @@
 				DCAE0CDC193668FF00046924 /* DDPHomePageTVC.m in Sources */,
 				DCBB3B2C193F8ACD006551DC /* DDPAddCityTVC.m in Sources */,
 				DC43E5CA1931E49000A0123C /* DDPViewController.m in Sources */,
+				DC7CB9EA1A17B1C400B82B93 /* DDPConstants.m in Sources */,
 				DC43E5C01931E49000A0123C /* main.m in Sources */,
 				DCAF6AFD19A24FBB00E407EB /* DDPOptionUserTVC.m in Sources */,
+				DC7CB9E71A17759100B82B93 /* DDPSelectCityVC.m in Sources */,
 				DCAD6C6D193C756E00241C5D /* DDPImage.m in Sources */,
 				DCAD6C6A193C51A500241C5D /* MBProgressHUD.m in Sources */,
 				DC682820194DE8AA00AE79B7 /* DDPHomeMySkillsTVC.m in Sources */,

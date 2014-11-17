@@ -23,7 +23,7 @@
 	<key>DESCRIPTION_MAX_CHAR_LIMIT</key>
 	<integer>250</integer>
 	<key>RADIUS_POINT</key>
-	<integer>80</integer>
+	<integer>1000</integer>
 	<key>cellJobAdMarginLabelTop</key>
 	<integer>50</integer>
 	<key>cellJobAdMarginLabelBottom</key>

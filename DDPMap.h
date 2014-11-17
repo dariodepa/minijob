@@ -13,6 +13,7 @@
 - (void)reloadTablePlace:(NSMutableArray *)arraySearch;
 - (void)addPlacemarkToMap:(MKMapView *)mapView location:(CLLocation *)location;
 - (void)saveCurrentLocation:(CLLocation *)location;
+- (void)saveCurrentCity:(NSString *)nameCity;
 - (void)alertError:(NSString *)error;
 @end
 
@@ -37,6 +38,8 @@
 - (void)fetchPlaceDetail:(NSString *)textSearch;
 - (void)addPlacemarkAnnotationToMap:(NSString *)address mapView:(MKMapView *)mapView;
 - (void)getGeoPoint;
+- (void)reverseGeocodeLocation:(CLLocation *)location;
+- (MKMapView *)addPointAnnotation:(MKMapView *)mapView location:(CLLocation *)location;
 
 //- (void)addPlacemarkAnnotationToMap:(CLPlacemark *)placemark addressString:(NSString *)address mapView:(MKMapView *)mapView;
 @end

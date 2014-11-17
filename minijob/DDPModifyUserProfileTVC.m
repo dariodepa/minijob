@@ -18,14 +18,6 @@
 
 @implementation DDPModifyUserProfileTVC
 
-- (id)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 
 - (void)viewDidLoad
 {
@@ -55,7 +47,9 @@
         self.radiusValue.text = [NSString stringWithFormat:@"%f", [[self.applicationContext.constantsPlist valueForKey:@"RADIUS_POINT"] floatValue]];
         self.user.radius = [self.applicationContext.constantsPlist valueForKey:@"RADIUS_POINT"];
     }
-    self.radiusValue.text = [NSString stringWithFormat:@"%@", self.user.radius];
+    self.radiusValue.text = [NSString stringWithFormat:@"%d", [self.user.radius intValue]];
+    [self.radiusSlider setValue:[self.user.radius intValue]];
+    
     if([self.caller isEqualToString:@"idModifyRadius"]){
         HELP_MESSAGE = [self.applicationContext.constantsPlist valueForKey:@"HELP_MESSAGE_RADIUS"];
     }
@@ -120,6 +114,8 @@
             [self performSegueWithIdentifier:@"returnToOptionUser" sender:self];
             //self.labelCitySelected.text = [[PFUser currentUser] objectForKey:@"city"];
         } else {
+            [HUD hide:YES];
+            //AGG ALERT VIEW CON ERROR
             NSString *errorString = [error userInfo][@"error"];
             NSLog(@"ERROR %@",errorString);
         }
@@ -171,6 +167,8 @@
 
 - (IBAction)idSave:(id)sender
 {
+    //self.navigationItem.hidesBackButton = YES;
+    //self.navigationController.navigationItem.leftBarButtonItem.enabled = NO;
     if([self.caller isEqualToString:@"idModifyEmail"]){
         BOOL validMail = [DDPStringUtil validEmail:self.emailValue.text];
         if(validMail == NO){
@@ -184,6 +182,7 @@
     HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES]; //self.view.superview
     HUD.mode = MBProgressHUDModeIndeterminate;
     //HUD.delegate = self;
+    [self.view.window addSubview:HUD];
     [HUD show:YES];
     [self saveModifyUser];
 }
@@ -191,7 +190,7 @@
 - (IBAction)actionSlider:(id)sender {
     UISlider *slider = (UISlider *)sender;
     NSInteger val = lround(slider.value);
-    self.radiusValue.text = [NSString stringWithFormat:@"%d",val];
+    self.radiusValue.text = [NSString stringWithFormat:@"%d",(int)val];
     self.user.radius = [NSNumber numberWithFloat:val];
     
 }

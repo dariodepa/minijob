@@ -19,6 +19,7 @@
     NSTimer *timerCurrentUploads;
     NSIndexPath *indexPathSelected;
     DDPUser *mySkills;
+    CLLocation *location;
 }
 @property (strong, nonatomic) DDPApplicationContext *applicationContext;
 @property (assign, nonatomic) UIViewController *caller;

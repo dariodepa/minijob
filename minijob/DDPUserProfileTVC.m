@@ -13,6 +13,7 @@
 #import "DDPUser.h"
 #import "DDPAppDelegate.h"
 #import "DDPCommons.h"
+#import "DDPConstants.h"
 
 @interface DDPUserProfileTVC ()
 @end
@@ -44,8 +45,14 @@
     [self initialize];
 }
 
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:YES];
+    NSLog(@"viewWillAppear");
+    [self.tableView reloadData];
+}
 
 -(void)initialize{
+   
     NSLog(@"user: %@", self.userProfile);
     [DDPCommons customizeTitle:self.navigationItem];
     if(self.userProfile){
@@ -74,6 +81,14 @@
         user.email = [[PFUser currentUser] objectForKey:@"email"];
         [user loadSkills:[PFUser currentUser]];
     }
+    if(!user.location){
+        user.location = (NSString*)[self.applicationContext getVariable:CURRENT_CITY];
+    }
+    if(!user.position){
+        user.position = (CLLocation*)[self.applicationContext getVariable:CURRENT_POSITION];
+    }
+     NSLog(@"user: %@", user.userOid);
+    
     arraySkills = [[NSMutableArray alloc] init];
     user.delegateSkills = self;
     
@@ -117,11 +132,11 @@
         //load image
         PFFile *imageView = user.imageProfile;
         [imageTool loadImage:imageView];
-        NSLog(@"load image");
+        NSLog(@"1111111-load image");
     }else{
         [HUD hide:YES];
         UIImage *image = [UIImage imageNamed:@"noProfile.jpg"];
-        CGSize newSize = CGSizeMake(140,140);
+        CGSize newSize = CGSizeMake(280,280);
         self.photoProfile.image =[DDPImage scaleAndCropImage:image intoSize:newSize];
     }
 }
@@ -130,16 +145,17 @@
 //+++++++++++++++++++++++++++++++++++++++//
 -(void)refreshImage:(NSData *)imageData
 {
+    NSLog(@"333333-refresh");
     [HUD hide:YES];
     UIImage *image = [UIImage imageWithData:imageData];
-    CGSize newSize = CGSizeMake(140,140);
+    CGSize newSize = CGSizeMake(280,280);
     self.photoProfile.image =[DDPImage scaleAndCropImage:image intoSize:newSize];
 }
 
 - (void)setProgressBar:(NSIndexPath *)indexPath progress:(float)progress
 {
     HUD.progress = progress;
-    NSLog(@"progress %f", progress);
+    NSLog(@"2222222-progress %f", progress);
 }
 //+++++++++++++++++++++++++++++++++++++++//
 
@@ -190,13 +206,13 @@
     return 1;
 }
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    NSLog(@"titleForHeaderInSection %d", section);
+    NSLog(@"titleForHeaderInSection %d", (int)section);
     if(section==1)return NSLocalizedString(@"ELENCO COMPETENZE", nil);
     return nil;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSLog(@"numberOfRowsInSection %d - %d", section,  [arraySkills count]);
+    NSLog(@"numberOfRowsInSection %d - %d", (int)section,  (int)[arraySkills count]);
     [super tableView:tableView numberOfRowsInSection:section];
     if(section==1) {
         return [arraySkills count];
@@ -246,7 +262,12 @@
         UIImageView *imageView = (UIImageView *)[cell viewWithTag:12];
         
         if(indexPath.row == 0){
-            textLabel.text = [NSString stringWithFormat:@"%@: %@",NSLocalizedString(@"CityLKey", nil), user.location];
+            if(user.location){
+                textLabel.text = [NSString stringWithFormat:@"%@: %@",NSLocalizedString(@"CityLKey", nil), user.location];
+            }else{
+                 textLabel.text = [NSString stringWithFormat:@"%@: ",NSLocalizedString(@"CityLKey", nil)];
+            }
+            
             imageView.image = [UIImage imageNamed:@"pin.png"];
         } else if(indexPath.row == 1){
             NSString *labelPhone;
@@ -302,8 +323,17 @@
         //DDPOptionUserTVC *VC = [segue destinationViewController];
         VC.applicationContext = self.applicationContext;
         VC.user=user;
-        VC.photoProfile = self.photoProfile;
+        VC.imagePhotoProfile = self.photoProfile.image;
     }
+    else if ([[segue identifier] isEqualToString:@"toMySkills"]) {
+//        UINavigationController *nc = [segue destinationViewController];
+//        DDPOptionUserTVC *VC = (DDPOptionUserTVC *)[[nc viewControllers] objectAtIndex:0];
+//        VC.applicationContext = self.applicationContext;
+//        VC.user=user;
+//        VC.imagePhotoProfile = self.photoProfile.image;
+    }
+    
+    
 }
 
 
@@ -315,10 +345,14 @@
     [[UIApplication sharedApplication] openURL:url];
 }
 //-------------------------------//
+- (IBAction)actionGoToAddSkill:(id)sender {
+    [self performSegueWithIdentifier:@"toMySkills" sender:self];
+}
+
 - (IBAction)returnToUserProfile:(UIStoryboardSegue*)sender
 {
     NSLog(@"returnToUserProfile:");
-    [self initialize];
+    //[self initialize];
     [self.tableView reloadData];
 }
 

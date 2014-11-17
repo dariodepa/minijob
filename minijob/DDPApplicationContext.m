@@ -7,13 +7,11 @@
 //
 
 #import "DDPApplicationContext.h"
-
+#import "DDPConstants.h"
 
 
 @implementation DDPApplicationContext
-static NSString *LOCATION_LAT_KEY = @"searchLocationLat";
-static NSString *LOCATION_LON_KEY = @"searchLocationLon";
-static NSString *LAST_LOADED_CATEGORIES = @"lastLoadedCategories";
+
 
 - (id) init
 {

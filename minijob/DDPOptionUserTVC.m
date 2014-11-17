@@ -14,20 +14,13 @@
 #import "DDPImage.h"
 #import "DDPModifyUserProfileTVC.h"
 #import "DDPAppDelegate.h"
+#import "DDPConstants.h"
+#import "DDPUserProfileTVC.h"
 
 @interface DDPOptionUserTVC ()
 @end
 
 @implementation DDPOptionUserTVC
-
-- (id)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 
 - (void)viewDidLoad
 {
@@ -37,15 +30,12 @@
         self.applicationContext = appDelegate.applicationContext;
     }
     imageTool = [[DDPImage alloc] init];
-    
     [self initialize];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
     NSLog(@"viewWillAppear");
-    [self initialize];
-    
 }
 
 -(void)initialize{
@@ -65,26 +55,34 @@
     }
     self.radiusValue.text = [NSString stringWithFormat:@"%@", self.user.radius];
     self.labelLogout.title = NSLocalizedString(@"logout", nil);
-    [self loadImageProfile];
-    NSLog(@"%@", self.user.radius);
+    NSLog(@"photoProfile %@", self.photoProfile);
+    if(self.imagePhotoProfile){
+        CGSize newSize = CGSizeMake(280,280);
+        self.photoProfile.image =[DDPImage scaleAndCropImage:self.imagePhotoProfile intoSize:newSize];
+        [imageTool customRoundImage:self.photoProfile];
+    }else{
+        [self loadImageProfile];
+    }
+    //NSLog(@"%@", self.user.radius);
 }
 
 
 -(void)saveMyCity{
     if(self.applicationContext.citySelected){
         DDPCity *citySelected = self.applicationContext.citySelected;
-        NSLog(@"location: %@",citySelected.location);
+        NSLog(@"location: %@",citySelected);
         PFGeoPoint *currentPoint = [PFGeoPoint geoPointWithLatitude:citySelected.location.coordinate.latitude  longitude:citySelected.location.coordinate.longitude];
         [[PFUser currentUser] setObject:currentPoint forKey:@"position"];
-        [[PFUser currentUser] setObject:citySelected.description forKey:@"city"];
-        [[PFUser currentUser] saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            if (!error) {
-                self.cityValue.text = [[PFUser currentUser] objectForKey:@"city"];
-            } else {
-                NSString *errorString = [error userInfo][@"error"];
-                NSLog(@"ERROR %@",errorString);
-            }
-        }];
+        [[PFUser currentUser] setObject:citySelected.cityDescription forKey:@"city"];
+        [[PFUser currentUser] saveInBackground];
+//        [[PFUser currentUser] saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+//            if (!error) {
+//                self.cityValue.text = [[PFUser currentUser] objectForKey:@"city"];
+//            } else {
+//                NSString *errorString = [error userInfo][@"error"];
+//                NSLog(@"ERROR %@",errorString);
+//            }
+//        }];
     }
 }
 
@@ -123,10 +121,8 @@
 // TAKE PHOTO SECTION
 -(void)resetUserPhoto {
     UIImage *image = [UIImage imageNamed:@"noProfile.jpg"];
-    CGSize newSize = CGSizeMake(140,140);
+    CGSize newSize = CGSizeMake(280,280);
     self.photoProfile.image =[DDPImage scaleAndCropImage:image intoSize:newSize];
-    NSString *NAME_IMAGE_PROFILE = [self.applicationContext.constantsPlist valueForKey:@"NAME_IMAGE_PROFILE"];
-    NSString *KEY_IMAGE_PROFILE = [self.applicationContext.constantsPlist valueForKey:@"KEY_IMAGE_PROFILE"];
     [imageTool saveImageWithoutDelegate:nil nameImage:NAME_IMAGE_PROFILE key:KEY_IMAGE_PROFILE];
 }
 
@@ -173,14 +169,12 @@
     if (!image) {
         image = [UIImage imageNamed:@"noProfile.jpg"];
     }
-    CGSize newSize = CGSizeMake(140,140);
-    self.photoProfile.image =[DDPImage scaleAndCropImage:image intoSize:newSize];
+    CGSize newSize = CGSizeMake(280,280);
     
+    self.imagePhotoProfile =[DDPImage scaleAndCropImage:image intoSize:newSize];
     [imageTool customRoundImage:self.photoProfile];
-    
-    NSString *NAME_IMAGE_PROFILE = [self.applicationContext.constantsPlist valueForKey:@"NAME_IMAGE_PROFILE"];
-    NSString *KEY_IMAGE_PROFILE = [self.applicationContext.constantsPlist valueForKey:@"KEY_IMAGE_PROFILE"];
-    [imageTool saveImageWithoutDelegate:self.photoProfile.image nameImage:NAME_IMAGE_PROFILE key:KEY_IMAGE_PROFILE];
+    self.photoProfile.image = self.imagePhotoProfile;
+    [imageTool saveImageWithoutDelegate:self.imagePhotoProfile nameImage:NAME_IMAGE_PROFILE key:KEY_IMAGE_PROFILE];
 }
 
 
@@ -191,32 +185,16 @@
     HUD.delegate = self;
     [HUD show:YES];
     imageTool.delegate = self;
-    
     [imageTool customRoundImage:self.photoProfile];
     if(self.user.imageProfile && !(self.user.imageProfile==nil)){
         //load image
         PFFile *imageView = self.user.imageProfile;
         [imageTool loadImage:imageView];
-        NSLog(@"load image");
-//    }
-//    else if (FBSession.activeSession.isOpen) {
-//        [[FBRequest requestForMe] startWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *userFB, NSError *error) {
-//            if (!error) {
-//                NSLog(@"user: %@", userFB);
-//                NSString *facebookID = userFB[@"id"];
-//                NSURL *pictureURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=large&return_ssl_resources=1", facebookID]];
-//                NSLog(@"pictureURL: %@", pictureURL);
-//                
-//                NSData *imageData = [NSData dataWithContentsOfURL:pictureURL];
-//                PFImageView *imageView = [[PFImageView alloc] init];
-//                imageView.file = (PFFile *)[PFFile fileWithName:@"imageProfile" data:imageData];
-//                [imageTool loadImage:imageView.file];
-//            }
-//        }];
+        NSLog(@"11111111-load image");
     }else{
         [HUD hide:YES];
         UIImage *image = [UIImage imageNamed:@"noProfile.jpg"];
-        CGSize newSize = CGSizeMake(140,140);
+        CGSize newSize = CGSizeMake(280,280);
         self.photoProfile.image =[DDPImage scaleAndCropImage:image intoSize:newSize];
     }
 }
@@ -229,11 +207,8 @@
 {
     [HUD hide:YES];
     UIImage *image = [UIImage imageWithData:imageData];
-    CGSize newSize = CGSizeMake(140,140);
+    CGSize newSize = CGSizeMake(280,280);
     self.photoProfile.image =[DDPImage scaleAndCropImage:image intoSize:newSize];
-    
-    NSString *NAME_IMAGE_PROFILE = [self.applicationContext.constantsPlist valueForKey:@"NAME_IMAGE_PROFILE"];
-    NSString *KEY_IMAGE_PROFILE = [self.applicationContext.constantsPlist valueForKey:@"KEY_IMAGE_PROFILE"];
     [imageTool saveImageWithoutDelegate:self.photoProfile.image nameImage:NAME_IMAGE_PROFILE key:KEY_IMAGE_PROFILE];
 }
 
@@ -260,10 +235,10 @@
         callerCellId = [NSString stringWithFormat:@"idModifySurname"];
         [self performSegueWithIdentifier:@"toModify" sender:self];
     }
-    else if([[cell reuseIdentifier] isEqualToString:@"idModifyEmail"]){
-        callerCellId = [NSString stringWithFormat:@"idModifyEmail"];
-        [self performSegueWithIdentifier:@"toModify" sender:self];
-    }
+//    else if([[cell reuseIdentifier] isEqualToString:@"idModifyEmail"]){
+//        callerCellId = [NSString stringWithFormat:@"idModifyEmail"];
+//        [self performSegueWithIdentifier:@"toModify" sender:self];
+//    }
     else if([[cell reuseIdentifier] isEqualToString:@"idModifyTelephone"]){
         callerCellId = [NSString stringWithFormat:@"idModifyTelephone"];
         [self performSegueWithIdentifier:@"toModify" sender:self];
@@ -282,7 +257,6 @@
     if ([[segue identifier] isEqualToString:@"toAddCity"]) {
         DDPAddCityTVC *VC = [segue destinationViewController];
         VC.applicationContext = self.applicationContext;
-        VC.callerViewController = self;
     }
     else if ([[segue identifier] isEqualToString:@"toModify"]) {
         DDPModifyUserProfileTVC *VC = [segue destinationViewController];
@@ -290,6 +264,13 @@
         VC.caller = callerCellId;
         VC.user = self.user;
     }
+    else if ([[segue identifier] isEqualToString:@"returnToUserProfile"]) {
+        DDPUserProfileTVC *VC = [segue destinationViewController];
+        VC.applicationContext = self.applicationContext;
+        VC.photoProfile.image = self.imagePhotoProfile;
+    }
+
+    
 }
 
 - (void)logOut {
@@ -320,16 +301,15 @@
 
 - (IBAction)actionExit:(id)sender {
     NSLog(@"INDIETRO");
-    [self dismissViewControllerAnimated:YES completion:nil];
-    
-    //[self performSegueWithIdentifier:@"returnToUserProfile" sender:self];
+    //[self dismissViewControllerAnimated:YES completion:nil];
+    [self performSegueWithIdentifier:@"returnToUserProfile" sender:self];
 }
 
 - (IBAction)returnToOptionUser:(UIStoryboardSegue*)sender
 {
     NSLog(@"CALLER: %@", self.caller.title);
-    if([self.caller.title isEqualToString:@"idAddCity"]){
-        self.cityValue.text = self.applicationContext.citySelected.description;//[[PFUser currentUser] objectForKey:@"city"];
+    if([self.caller.title isEqualToString:@"idSelectCity"]){
+        self.cityValue.text = self.applicationContext.citySelected.cityDescription;
         [self saveMyCity];
     }
     else{

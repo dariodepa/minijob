@@ -11,6 +11,7 @@
 
 @implementation DDPMap
 
+
 - (void)fetchPlaceDetail:(NSString *)textSearch{
     //NSString *str = [textSearch stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSString *str = [textSearch stringByReplacingOccurrencesOfString:@" " withString:@"+"];
@@ -26,10 +27,11 @@
 
 
 - (NSString *)googleURLString:(NSString *)textSearch {
+    //https://developers.google.com/places/documentation/autocomplete
     NSString *URL_GOOGLE_AUTOCOMPLETE = [self.applicationContext.constantsPlist valueForKey:@"URL_GOOGLE_AUTOCOMPLETE"];
-    
+    NSString *KEY_GOOGLE_MAP = [self.applicationContext.constantsPlist valueForKey:@"KEY_GOOGLE_MAP"];
     //[textSearch stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSMutableString *url = [NSMutableString stringWithFormat:URL_GOOGLE_AUTOCOMPLETE, textSearch, self.googleMapKey, self.latitude, self.longitude, self.radius, self.language];
+    NSMutableString *url = [NSMutableString stringWithFormat:URL_GOOGLE_AUTOCOMPLETE, textSearch, KEY_GOOGLE_MAP, self.latitude, self.longitude, self.radius, self.language];
     NSLog(@"googleURLString: %@",url);
     return url;
 }
@@ -73,7 +75,7 @@
             return;
         }
         if ([[response objectForKey:@"status"] isEqualToString:@"OK"]) {
-            NSLog(@"OK: %@", response);
+            NSLog(@"OK:");
             [self succeedWithPlaces:[response objectForKey:@"predictions"]];
             return;
         }
@@ -83,12 +85,12 @@
 
 
 - (void)succeedWithPlaces:(NSArray *)places {
-    NSLog(@"succeedWithPlaces: %@",places);
+   //NSLog(@"succeedWithPlaces: %@",places);
     [self.arraySearch removeAllObjects];
     for (NSDictionary *place in places) {
         [self.arraySearch addObject:place];
     }
-    NSLog(@"arraySearch: %@", self.arraySearch);
+    NSLog(@"arraySearch: ");
     [self.delegate reloadTablePlace:self.arraySearch];
 }
 
@@ -120,6 +122,20 @@
     }];
 }
 
+- (MKMapView *)addPointAnnotation:(MKMapView *)mapView location:(CLLocation *)location{
+    float spanX = 0.30725;
+    float spanY = 0.30725;
+    MKCoordinateRegion region;
+    region.center.latitude = location.coordinate.latitude;
+    region.center.longitude = location.coordinate.longitude;
+    region.span = MKCoordinateSpanMake(spanX, spanY);
+    [mapView setRegion:region animated:YES];
+    MKPointAnnotation *myAnnotation = [[MKPointAnnotation alloc] init];
+    myAnnotation.coordinate = CLLocationCoordinate2DMake(location.coordinate.latitude, location.coordinate.longitude);
+    [mapView addAnnotation:myAnnotation];
+    return mapView;
+}
+
 -(void)getGeoPoint{
      NSLog(@"getGeoPoint");
     [self setPermissionLocationManager];
@@ -136,6 +152,27 @@
             NSLog(@"location error: %@",error);
             [self.delegate alertError:@"noSetGeopoint"];
         }
+    }];
+}
+
+-(void)reverseGeocodeLocation:(CLLocation *)location{
+     NSLog(@"reverseGeocodeLocation");
+    [self setPermissionLocationManager];
+
+    CLGeocoder *geocoder = [[CLGeocoder alloc] init];
+    [geocoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
+        if(error){
+            NSLog(@"%@", [error localizedDescription]);
+        }
+        CLPlacemark *placemark = [placemarks lastObject];
+        
+         NSString *addressTxt = [NSString stringWithFormat:@"%@ (%@)",
+                                 placemark.locality,
+                                 placemark.subAdministrativeArea];
+                                 //placemark.country];
+        
+        [self.delegate saveCurrentCity:addressTxt];
+        NSLog(@"addressTxt: %@", addressTxt);
     }];
 }
 

@@ -12,6 +12,7 @@
 #import "DDPUser.h"
 #import "DDPApplicationContext.h"
 #import "DDPAppDelegate.h"
+#import "DDPConstants.h"
 
 UIAlertView *categoriesAlertView;
 
@@ -29,13 +30,14 @@ UIAlertView *categoriesAlertView;
         self.applicationContext = appDelegate.applicationContext;
     }
     NSLog(@"self.applicationContext.constantsPlist: %@",self.applicationContext);
-    [self initialize];
+    [self.activityIndicator startAnimating];
+    
     
 }
 
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    
+    [self initialize];
 }
 
 - (void)didReceiveMemoryWarning
@@ -46,34 +48,22 @@ UIAlertView *categoriesAlertView;
 
 - (void)initialize{
     NSLog(@"initialize PRELOAD");
-    [self.activityIndicator startAnimating];
-    
-    NSArray *ARRAY_PRELOAD =  [self.applicationContext.constantsPlist valueForKey:@"ARRAY_PRELOAD"];
-    for (NSString *keyControll in ARRAY_PRELOAD){
-        NSLog(@"keyControll: %@",keyControll);
-        if([keyControll isEqualToString:@"LAST_LOADED_CATEGORIES"]){
-            //[self checkLastLoadedCategories];
-            [self loadCategories];
-        }
-        else if([keyControll isEqualToString:@"MY_POSITION"]){
-            [self setCurrentLocation];
-        }
-        else{
-            //alert
-        }
+    if (![self.applicationContext getVariable:LAST_LOADED_CATEGORIES]) {
+        [self loadCategories];
+    }else if(![self.applicationContext getVariable:CURRENT_POSITION]){
+        [self setCurrentLocation];
+    }else if([self.applicationContext getVariable:CURRENT_POSITION] && ![self.applicationContext getVariable:CURRENT_CITY]){
+         NSLog(@"setCurrentCity PRELOAD");
+        [self setCurrentCity];
+    }else{
+         NSLog(@"saveModifyUser PRELOAD");
+        [self saveModifyUser];
+        [self dismissionController];
     }
 }
 
 // ************ 1 LOAD CATEGORIES **************
-- (void)checkLastLoadedCategories{
-    NSString *LAST_LOADED_CATEGORIES = [self.applicationContext.constantsPlist valueForKey:@"LAST_LOADED_CATEGORIES"];
-    NSLog(@"LAST_LOADED_CATEGORIES : %@", LAST_LOADED_CATEGORIES);
-    if (!LAST_LOADED_CATEGORIES) {
-        [self loadCategories];
-    }
-}
 -(void)loadCategories {
-    NSString *LAST_LOADED_CATEGORIES = [self.applicationContext.constantsPlist valueForKey:@"LAST_LOADED_CATEGORIES"];
     [self.applicationContext removeObjectForKey:LAST_LOADED_CATEGORIES];
     DDPCategory *categoryDC = [[DDPCategory alloc] init];
     categoryDC.delegate = self;
@@ -81,39 +71,41 @@ UIAlertView *categoriesAlertView;
 }
 //CALL DELEGATE METOD FROM loadCategories
 -(void)categoriesLoaded:(NSArray *)categories {
-    for (PFObject *object in categories) {
-       NSLog(@"================== Category: %@", object);
-    }
-    NSString *LAST_LOADED_CATEGORIES = [self.applicationContext.constantsPlist valueForKey:@"LAST_LOADED_CATEGORIES"];
     [self.applicationContext setVariable:LAST_LOADED_CATEGORIES withValue:categories];
-    [self controllPreload];
-    //NSLog(@"LAST_LOADED_CATEGORIES : %@", [self.applicationContext.constantsPlist valueForKey:@"LAST_LOADED_CATEGORIES"]);
+    [self initialize];
 }
 // ************ END LOAD CATEGORIES **************
 
 
 // ************ 2 LOAD POSITION MAP **************
 -(void)setCurrentLocation{
-    NSString *LAST_MY_POSITION = [self.applicationContext.constantsPlist valueForKey:@"LAST_MY_POSITION"];
-    [self.applicationContext removeObjectForKey:LAST_MY_POSITION];
+    [self.applicationContext removeObjectForKey:CURRENT_POSITION];
     DDPMap *map = [[DDPMap alloc] init];
     map.delegate = self;
     [map getGeoPoint];
 }
 //CALL DELEGATE METOD from setCurrentLocation
 -(void)saveCurrentLocation:(CLLocation *)location {
-    NSLog(@"================== location: %@", location);
-    self.applicationContext.lastLocation = location;
-    NSString *LAST_MY_POSITION = [self.applicationContext.constantsPlist valueForKey:@"LAST_MY_POSITION"];
-    [self.applicationContext setVariable:LAST_MY_POSITION withValue:location];
-    [self controllPreload];
+    [self.applicationContext setVariable:CURRENT_POSITION withValue:location];
+    [self initialize];
 }
 // ************ END LOAD POSITION MAP **************
 
 
 
-// ************ 3 LOAD SETTING PLIST ****************
-
+// ************ 3 LOAD SETTING CITY NAME ****************
+-(void)setCurrentCity{
+    [self.applicationContext removeObjectForKey:CURRENT_CITY];
+    DDPMap *map = [[DDPMap alloc] init];
+    map.delegate = self;
+    CLLocation *location = (CLLocation *)[self.applicationContext getVariable:CURRENT_POSITION];
+    [map reverseGeocodeLocation:location];
+}
+//CALL DELEGATE METOD from setCurrentLocation
+-(void)saveCurrentCity:(NSString *)cityName {
+    [self.applicationContext setVariable:CURRENT_CITY withValue:cityName];
+    [self initialize];
+}
 // ************ END LOAD SETTING PLIST **************
 
 
@@ -126,35 +118,29 @@ UIAlertView *categoriesAlertView;
 
 //******************************************************
 
--(void)controllPreload{
-    NSLog(@"controllPreload");
-    bool dismiss = 1;
-    NSArray *ARRAY_PRELOAD =  [self.applicationContext.constantsPlist valueForKey:@"ARRAY_PRELOAD"];
-    NSString *LAST_LOADED_CATEGORIES = [self.applicationContext.constantsPlist valueForKey:@"LAST_LOADED_CATEGORIES"];
-    NSString *LAST_MY_POSITION = [self.applicationContext.constantsPlist valueForKey:@"LAST_MY_POSITION"];
-    //NSLog(@"array %@",[self.applicationContext getVariable:LAST_LOADED_CATEGORIES]);
-    
-    for (NSString *keyControll in ARRAY_PRELOAD){
-        if([keyControll isEqualToString:@"LAST_LOADED_CATEGORIES"]){
-            if(![self.applicationContext getVariable:LAST_LOADED_CATEGORIES]){
-                dismiss = 0;
-            }else{
-                 NSLog(@"LAST_LOADED_CATEGORIES: %@",[self.applicationContext getVariable:LAST_LOADED_CATEGORIES]);
+
+-(void)saveModifyUser{
+    PFQuery *query = [PFUser query];
+    [query whereKey:@"objectId" equalTo:[PFUser currentUser].objectId];
+    //[query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    [query getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+        if (!error) {
+//             NSLog(@"position %@", object[@"position"]);
+//             NSLog(@"city %@", object[@"city"]);
+            if(!object[@"position"] || [object[@"city"] isEqual:@""]){
+                CLLocation *position = (CLLocation *)[self.applicationContext getVariable:CURRENT_POSITION] ;
+                PFGeoPoint *currentPoint = [PFGeoPoint geoPointWithLatitude:position.coordinate.latitude longitude:position.coordinate.longitude];
+                [[PFUser currentUser] setObject:[self.applicationContext getVariable:CURRENT_CITY] forKey:@"city"];
+                [[PFUser currentUser] setObject:currentPoint forKey:@"position"];
+                NSLog(@"[PFUser currentUser] %@", [PFUser currentUser]);
+                [[PFUser currentUser] saveEventually];
             }
+        } else {
+            NSLog(@"Error: %@ %@", error, [error userInfo]);
         }
-        else if([keyControll isEqualToString:@"MY_POSITION"]){
-            if(![self.applicationContext getVariable:LAST_MY_POSITION]){
-                dismiss = 0;
-            }else{
-                NSLog(@"LAST_MY_POSITION: %@",[self.applicationContext getVariable:LAST_MY_POSITION]);
-            }
-        }
-        NSLog(@"keyControll: %@, %d",keyControll, dismiss);
-    }
-    if(dismiss == 1){
-        [self dismissionController];
-    }
+    }];
 }
+
 
 
 

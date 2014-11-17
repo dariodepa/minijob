@@ -10,7 +10,7 @@
 
 @interface DDPCity : NSObject
 @property(nonatomic, strong) NSString *oid;
-@property(nonatomic, strong) NSString *description;
+@property(nonatomic, strong) NSString *cityDescription;
 @property(nonatomic, strong) NSString *reference;
 @property (nonatomic, strong) CLLocation *location;
 @end

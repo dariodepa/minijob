@@ -14,7 +14,7 @@
 #import "DDPAddCityTVC.h"
 #import "DDPApplicationContext.h"
 #import "DDPCommons.h"
-
+#import "DDPConstants.h"
 @interface DDPHomeMySkillsTVC ()
 @end
 
@@ -41,10 +41,16 @@
 }
 
 -(void)loadMyCity{
-    if([[PFUser currentUser] objectForKey:@"city"]){
-        self.labelCitySelected.text = [[PFUser currentUser] objectForKey:@"city"];
+    if([[PFUser currentUser] valueForKey:@"position"]){
+        PFGeoPoint *position = (PFGeoPoint *)[[PFUser currentUser] valueForKey:@"position"];
+        location = [[CLLocation alloc] initWithLatitude:position.latitude longitude:position.longitude];
+        self.labelCitySelected.text = [[PFUser currentUser] valueForKey:@"city"];
+    }else if([self.applicationContext getVariable:CURRENT_POSITION]){
+        location = (CLLocation *)[self.applicationContext getVariable:CURRENT_POSITION];
+        self.labelCitySelected.text = (NSString *)[self.applicationContext getVariable:CURRENT_CITY];
     }else{
         self.labelCitySelected.text = @"seleziona una città";
+        location = [[CLLocation alloc] initWithLatitude:40.1783288 longitude:18.1806903];
     }
 }
 
@@ -180,6 +186,7 @@
         DDPAddCityTVC *VC = [segue destinationViewController];
         VC.callerViewController = self;
         VC.applicationContext = self.applicationContext;
+        VC.
     }
     else if ([[segue identifier] isEqualToString:@"toListSkills"]) {
         NSLog(@"mySkills %@",mySkills);
