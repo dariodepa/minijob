@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 #import "DDPMap.h"
+#import "MBProgressHUD.h"
 
 @class DDPCity;
 
@@ -16,9 +17,10 @@
 - (void)checkFieldsCity:(NSDictionary *)citySelected;
 @end
 
-@interface DDPAddCityTVC : UIViewController <UISearchBarDelegate, UISearchDisplayDelegate, UITableViewDelegate, UITableViewDataSource,CLLocationManagerDelegate, DDPMapDelegate >{
+@interface DDPAddCityTVC : UIViewController <MBProgressHUDDelegate, UISearchBarDelegate, UISearchDisplayDelegate, UITableViewDelegate, UITableViewDataSource,CLLocationManagerDelegate, DDPMapDelegate >{
     DDPCity *citySelected;
     NSString *caller;
+    MBProgressHUD *HUD;
 }
 
 @property (strong, nonatomic) DDPApplicationContext *applicationContext;
@@ -27,6 +29,7 @@
 
 @property (nonatomic, strong) DDPMap *mapController;
 @property (strong, nonatomic) NSMutableArray *arraySearch;
+@property (strong, nonatomic) NSString *textHeader;
 @property (weak, nonatomic) IBOutlet UILabel *labelHeader;
 @property (weak, nonatomic) IBOutlet UILabel *labelMyCity;
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;

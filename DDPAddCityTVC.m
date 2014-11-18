@@ -52,22 +52,14 @@
 {
     self.toolBar.hidden = YES;
     [self initMap];
-    
-    if([self.callerViewController.title isEqualToString:@"idHomeMySkills"]){
-        [self initMyCity];
-    }
-    else if([self.callerViewController.title isEqualToString:@"idOptionUser"]){
-        [self initMyCity];
-    }
-    else{
-        [self initSelectedCity];
-    }
 }
 
 
 -(void)initMap{
     self.mapController.applicationContext = self.applicationContext;
+    self.labelHeader.text = self.textHeader;
     if([[PFUser currentUser] valueForKey:@"position"]){
+        NSLog(@"city: %@",[[PFUser currentUser] valueForKey:@"city"]);
         PFGeoPoint *position = (PFGeoPoint *)[[PFUser currentUser] valueForKey:@"position"];
         self.mapController.latitude = position.latitude;
         self.mapController.longitude = position.longitude;
@@ -88,87 +80,41 @@
     self.mapController.language = [NSString stringWithFormat:@"%@", [[NSLocale preferredLanguages] objectAtIndex:0]];
 }
 
-
-//-(void)initSelectedCity{
-//    NSString *LAST_CITY_OID_SELECTED = [self.applicationContext.constantsPlist valueForKey:@"LAST_CITY_OID_SELECTED"];
-//    NSString *LAST_CITY_DESCRIPTION_SELECTED = [self.applicationContext.constantsPlist valueForKey:@"LAST_CITY_DESCRIPTION_SELECTED"];
-//    NSString *LAST_CITY_REFERENCE_SELECTED = [self.applicationContext.constantsPlist valueForKey:@"LAST_CITY_REFERENCE_SELECTED"];
-//    if(!self.applicationContext.citySelected){
-//        NSString *lastCityOid = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_CITY_OID_SELECTED];
-//        if (lastCityOid) {
-//            citySelected.oid = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_CITY_OID_SELECTED];
-//            citySelected.cityDescription =[[NSUserDefaults standardUserDefaults] objectForKey:LAST_CITY_DESCRIPTION_SELECTED];
-//            citySelected.reference =[[NSUserDefaults standardUserDefaults] objectForKey:LAST_CITY_REFERENCE_SELECTED];
-//            self.applicationContext.citySelected = citySelected;
-//            [self.mapController addPlacemarkAnnotationToMap:self.applicationContext.citySelected.description mapView:self.mapView];
-//        }
-//    }
-//}
-
--(void)initMyCity{
-    if([[PFUser currentUser] objectForKey:@"city"]){
-        [self.mapController addPlacemarkAnnotationToMap:[[PFUser currentUser] objectForKey:@"city"] mapView:self.mapView];
-    }
-}
-
--(void)saveCityInUserDefault{
-    NSString *LAST_CITY_OID_SELECTED = [self.applicationContext.constantsPlist valueForKey:@"LAST_CITY_OID_SELECTED"];
-    NSString *LAST_CITY_DESCRIPTION_SELECTED = [self.applicationContext.constantsPlist valueForKey:@"LAST_CITY_DESCRIPTION_SELECTED"];
-    NSString *LAST_CITY_REFERENCE_SELECTED = [self.applicationContext.constantsPlist valueForKey:@"LAST_CITY_REFERENCE_SELECTED"];
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject:citySelected.oid forKey:LAST_CITY_OID_SELECTED];
-    [defaults setObject:citySelected.description forKey:LAST_CITY_DESCRIPTION_SELECTED];
-    [defaults setObject:citySelected.reference forKey:LAST_CITY_REFERENCE_SELECTED];
-    [defaults synchronize];
-}
-
 -(void)setViewController
 {
-    if([self.callerViewController.title isEqualToString:@"idHomeMySkills"]){
-        if(citySelected.oid){
-            [self.searchDisplayController.searchBar setText:citySelected.description];
-            [self performSegueWithIdentifier:@"returnToHomeMySkills" sender:self];
-        }else{
-            [self.searchDisplayController.searchBar setText:[[PFUser currentUser] objectForKey:@"city"]];
-            self.toolBar.hidden = YES;
-        }
-    }
-    else if([self.callerViewController.title isEqualToString:@"idOptionUser"]){
-        if(citySelected.oid){
-            [self.searchDisplayController.searchBar setText:citySelected.description];
-            [self performSegueWithIdentifier:@"returnToOptionUser" sender:self];
-        }else{
-            [self.searchDisplayController.searchBar setText:[[PFUser currentUser] objectForKey:@"city"]];
-            self.toolBar.hidden = YES;
-        }
+    if(self.applicationContext.citySelected){
+        [self.searchDisplayController.searchBar setText:self.applicationContext.citySelected.cityDescription];
+        self.toolBar.hidden = NO;
+        [self saveCityAndDismissView];
     }
     else{
-        //NSLog(@"-----> setViewController: %@",self.applicationContext.citySelected.description);
-        if(self.applicationContext.citySelected){
-            [self.searchDisplayController.searchBar setText:self.applicationContext.citySelected.description];
-            self.toolBar.hidden = NO;
-        }else{
-            self.searchDisplayController.searchBar.placeholder = @"città";
-            self.toolBar.hidden = YES;
-        }
+        self.searchDisplayController.searchBar.placeholder = @"città";
+        self.toolBar.hidden = YES;
     }
+
 }
 
-
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
+     NSLog(@"----------------- searchBarTextDidBeginEditing");
+    self.searchDisplayController.searchBar.text = @"";
+}
 
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
-     NSLog(@"----------------- CITY textDidChange: %@",searchText);
+    NSLog(@"----------------- CITY textDidChange: %@",searchText);
+    [self.searchDisplayController.searchResultsTableView reloadData];
     [self.mapController fetchPlaceDetail:(NSString *)searchText];
+    
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar{
     self.applicationContext.citySelected = nil;
+    self.navigationItem.hidesBackButton = NO;
     [self setViewController];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-     NSLog(@"------------------------ numberOfRowsInSection: %d",(int)self.arraySearch.count);
+    NSLog(@"------------------------ numberOfRowsInSection: %d",(int)self.arraySearch.count);
     return self.arraySearch.count;
 }
 
@@ -192,35 +138,36 @@
 }
 
 -(void)setCitySelected:(PFObject *)cityObject{
-    //NSLog(@"----------------- CITY SELECTED: %@",cityObject);
+    NSLog(@"----------------- CITY SELECTED: %@",cityObject);
     citySelected.oid = [cityObject objectForKey:@"id"];
     citySelected.cityDescription = [cityObject objectForKey:@"description"];
     citySelected.reference = [cityObject objectForKey:@"reference"];
+    self.labelMyCity.text = citySelected.cityDescription;
     self.applicationContext.citySelected = citySelected;
-    [self saveCityInUserDefault];
-    [self.mapController addPlacemarkAnnotationToMap:self.applicationContext.citySelected.description mapView:self.mapView];
+    self.navigationItem.hidesBackButton = YES;
+    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    HUD.mode = MBProgressHUDModeIndeterminate;
+    [HUD show:YES];
+    [self.mapView removeAnnotations:self.mapView.annotations];
+    [self.mapController addPlacemarkAnnotationToMap:self.applicationContext.citySelected.cityDescription mapView:self.mapView];
     
 }
-
-- (void)encodeWithCoder:(NSCoder *)encoder {
-    //NSLog(@"-----------------encodeWithCoder");
-    //Encode properties, other class variables, etc
-    [encoder encodeObject:citySelected.oid forKey:@"oid"];
-    [encoder encodeObject:citySelected.description forKey:@"description"];
-    [encoder encodeObject:citySelected.reference forKey:@"reference"];
-}
-
 
 
 /********** RESPONSE DDPMap ***********/
 -(void)reloadTablePlace:(NSMutableArray *)arraySearch{
-    //NSLog(@"reloadTablePlace");
-    self.arraySearch=arraySearch;
+    NSLog(@"reloadTablePlace");
+    [self.arraySearch removeAllObjects];
+    [self.arraySearch addObjectsFromArray:arraySearch];
+    //self.searchDisplayController.active = true;
     [self.searchDisplayController.searchResultsTableView reloadData];
+    
+    NSLog(@"reloadTablePlace width: ");
+    
 }
 
 -(void)addPlacemarkToMap:(MKMapView *)mapView location:(CLLocation *)location{
-    //NSLog(@"addPlacemarkToMap");
+    NSLog(@"addPlacemarkToMap");
     self.mapView=mapView;
     citySelected.location = location;
     self.applicationContext.lastLocation = location;
@@ -237,8 +184,7 @@
 - (void)alertError:(NSString *)error{
     NSLog(@"Error: %@",error);
 }
-/********************************/
-
+/*****************************************************************/
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
@@ -257,7 +203,33 @@
         vc.caller = self;
     }
 }
+/*****************************************************************/
+// SAVE CITY
+/*****************************************************************/
+-(void)saveCityAndDismissView{
+    //    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    //    HUD.mode = MBProgressHUDModeIndeterminate;
+    //    [HUD show:YES];
+    [self saveModifyUser];
+}
 
+-(void)saveModifyUser{
+    NSLog(@"[PFUser currentUser] %@",[PFUser currentUser]);
+    PFGeoPoint *currentPoint = [PFGeoPoint geoPointWithLatitude:citySelected.location.coordinate.latitude  longitude:citySelected.location.coordinate.longitude];
+    [[PFUser currentUser] setObject:currentPoint forKey:@"position"];
+    [[PFUser currentUser] setObject:citySelected.cityDescription forKey:@"city"];
+    [[PFUser currentUser] saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (!error) {
+            [HUD hide:YES];
+            //[self performSegueWithIdentifier:@"returnToOptionUser" sender:self];
+            //self.labelCitySelected.text = [[PFUser currentUser] objectForKey:@"city"];
+        } else {
+            NSString *errorString = [error userInfo][@"error"];
+            NSLog(@"ERROR %@",errorString);
+        }
+    }];
+}
+/*****************************************************************/
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -265,10 +237,17 @@
 }
 
 - (IBAction)toNext:(id)sender {
-    [self.wizardDictionary setObject:citySelected forKey:@"wizardCityKey"];
-    //[self.applicationContext setVariable:@"wizardDictionary" withValue:self.wizardDictionary];
-    [self setViewController];
-    [self performSegueWithIdentifier:@"toAddTitle" sender:self];
+    if([self.callerViewController.title isEqualToString:@"idHomeMySkills"]){
+        if(citySelected.oid){
+            [self performSegueWithIdentifier:@"returnToHomeMySkills" sender:self];
+        }
+    }
+    else if([self.callerViewController.title isEqualToString:@"idOptionUser"]){
+        if(citySelected.oid){
+            [self.wizardDictionary setObject:citySelected forKey:@"wizardCityKey"];
+            [self performSegueWithIdentifier:@"returnToOptionUser" sender:self];
+        }
+    }
 }
 
 @end

@@ -9,7 +9,6 @@
 #import "DDPPreloadVC.h"
 #import "DDPCategory.h"
 #import "DDPMap.h"
-#import "DDPUser.h"
 #import "DDPApplicationContext.h"
 #import "DDPAppDelegate.h"
 #import "DDPConstants.h"
@@ -55,7 +54,11 @@ UIAlertView *categoriesAlertView;
     }else if([self.applicationContext getVariable:CURRENT_POSITION] && ![self.applicationContext getVariable:CURRENT_CITY]){
          NSLog(@"setCurrentCity PRELOAD");
         [self setCurrentCity];
-    }else{
+    }else if(!self.applicationContext.mySkills){
+        NSLog(@"setCurrentCity PRELOAD");
+        [self loadMySkills];
+    }
+    else{
          NSLog(@"saveModifyUser PRELOAD");
         [self saveModifyUser];
         [self dismissionController];
@@ -108,6 +111,24 @@ UIAlertView *categoriesAlertView;
 }
 // ************ END LOAD SETTING PLIST **************
 
+
+// ************ 4 LOAD MY SKILLS ****************
+-(void)loadMySkills{
+    NSLog(@"loadMySkills");
+    DDPUser *mySkills = [[DDPUser alloc] init];
+    mySkills.delegateSkills = self;
+    [mySkills loadSkills:[PFUser currentUser]];
+}
+//DELEGATE
+//+++++++++++++++++++++++++++++++++++++++//
+-(void)skillsLoaded:(NSArray *)objects{
+    NSMutableArray *arraySkills = [[NSMutableArray alloc] init];
+    [arraySkills addObjectsFromArray:objects];
+    [self.applicationContext setMySkills:arraySkills];
+    [self initialize];
+    //NSLog(@"Successfully retrieved arraySkills %@", arraySkills);
+}
+// ************ END LOAD MY SKILLS **************
 
 //************ DISMISSION CONTROLLER *******************
 -(void)dismissionController {

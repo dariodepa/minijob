@@ -35,7 +35,7 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    [self.searchDisplayController.searchResultsTableView reloadData];
+    //[self.searchDisplayController.searchResultsTableView reloadData];
 }
 
 -(void)initialize

@@ -75,12 +75,15 @@
                 newSkill[@"categoryID"] = [PFObject objectWithoutDataWithClassName:@"Category" objectId:categoryID];
                 [newSkill saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                     if (!error) {
+                        NSLog(@"delegateSkills");
                         [self.delegateSkills responder];
                     } else {
                         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upload Failure" message:[error localizedDescription] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
                         [alert show];
                     }
                 }];
+            }else{
+                [self.delegateSkills responder];
             }
         } else {
             //            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upload Failure" message:[error localizedDescription] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];

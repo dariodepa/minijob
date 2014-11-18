@@ -24,20 +24,33 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [DDPCommons customizeTitle:self.navigationItem];
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self action:@selector(initialize) forControlEvents:UIControlEventValueChanged];
     [self.tableView setContentOffset:CGPointMake(0, -self.refreshControl.frame.size.height) animated:YES];
-    [self.refreshControl beginRefreshing];
-    
+    //[self.refreshControl beginRefreshing];
     myCategorySkills = [[NSMutableArray alloc] init];
     mySkills = [[DDPUser alloc] init];
+    
     [self initialize];
 }
 
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [self initialize];
+}
+
+
 -(void)initialize{
-    [DDPCommons customizeTitle:self.navigationItem];
-    [self loadMySkills];
     [self loadMyCity];
+    //NSLog(@"my shills: %@",self.applicationContext.mySkills);
+     if(!self.applicationContext.mySkills){
+         [self loadMySkills];
+     }else{
+         arraySkills = self.applicationContext.mySkills;
+         [self.refreshControl endRefreshing];
+         [self.tableView reloadData];
+     }
 }
 
 -(void)loadMyCity{
@@ -54,12 +67,15 @@
     }
 }
 
+//+++++++++++++++++++++++++++++++++++++++//
+// LOAD SKILLS
+//+++++++++++++++++++++++++++++++++++++++//
 -(void)loadMySkills{
     NSLog(@"loadMySkills");
+    [self.refreshControl beginRefreshing];
     mySkills.delegateSkills = self;
     [mySkills loadSkills:[PFUser currentUser]];
 }
-//+++++++++++++++++++++++++++++++++++++++//
 //DELEGATE
 //+++++++++++++++++++++++++++++++++++++++//
 -(void)skillsLoaded:(NSArray *)objects{
@@ -69,28 +85,8 @@
     //NSLog(@"Successfully retrieved arraySkills %@", arraySkills);
     [self.refreshControl endRefreshing];
     [self.tableView reloadData];
-
 }
-
 //+++++++++++++++++++++++++++++++++++++++//
-
--(void)saveMyCity{
-    if(self.applicationContext.citySelected){
-        DDPCity *citySelected = self.applicationContext.citySelected;
-        NSLog(@"location: %@",citySelected.location);
-        PFGeoPoint *currentPoint = [PFGeoPoint geoPointWithLatitude:citySelected.location.coordinate.latitude  longitude:citySelected.location.coordinate.longitude];
-        [[PFUser currentUser] setObject:currentPoint forKey:@"position"];
-        [[PFUser currentUser] setObject:citySelected.description forKey:@"city"];
-        [[PFUser currentUser] saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            if (!error) {
-                self.labelCitySelected.text = [[PFUser currentUser] objectForKey:@"city"];
-            } else {
-                NSString *errorString = [error userInfo][@"error"];
-                NSLog(@"ERROR %@",errorString);
-            }
-        }];
-    }
-}
 
 
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -119,14 +115,12 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     PFObject *object = [arraySkills objectAtIndex:indexPath.row];
-    
     static NSString *CellIdentifier = @"CellSkill";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
                                       reuseIdentifier:CellIdentifier];
     }
-   
     PFObject *cat = object[@"categoryID"];
     //NSLog(@"object %@",object);
     UILabel *textLabel = (UILabel *)[cell viewWithTag:11];
@@ -145,8 +139,8 @@
     {
         //[self.numbers removeObjectAtIndex:indexPath.row];
         NSLog(@"categorySelected %@",indexPath);
-        //PFObject *object = [arraySkills objectAtIndex:indexPath.row];
-        //[self removeSkillUsingId:object.objectId indexPath:indexPath];
+        PFObject *object = [arraySkills objectAtIndex:indexPath.row];
+        [self removeSkillUsingId:object.objectId indexPath:indexPath];
         // Delete the row from the data source
         //[tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     } 
@@ -155,14 +149,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:@"Sei sicuro di voler eliminare la competenza?" delegate:self cancelButtonTitle:@"NO" otherButtonTitles:@"SI", nil];
     [alert show];
     indexPathSelected = indexPath;
-    
-//        self.applicationContext.categorySelected = [self.objects objectAtIndex:indexPath.row];
-//        NSLog(@"categorySelected %@",self.applicationContext.categorySelected);
-//        [self performSegueWithIdentifier:@"toAddCityTVC" sender:self];
 }
 
 - (void)alertView:(UIAlertView *)alert clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -186,19 +175,21 @@
         DDPAddCityTVC *VC = [segue destinationViewController];
         VC.callerViewController = self;
         VC.applicationContext = self.applicationContext;
-        VC.
+        VC.textHeader = NSLocalizedString(@"In che città offri le tue competenze?", nil);
     }
     else if ([[segue identifier] isEqualToString:@"toListSkills"]) {
         NSLog(@"mySkills %@",mySkills);
         DDPListSkillsTVC *VC = [segue destinationViewController];
         VC.applicationContext = self.applicationContext;
         VC.arrayMySkills = myCategorySkills;
+        
     }
 }
 
 
 /*****************************************************************/
-
+//REMOVE SKILL
+//+++++++++++++++++++++++++++++++++++++++//
 -(void)removeSkillUsingId:(NSString *)skillID indexPath:(NSIndexPath *)indexPath{
     NSLog(@"removeSkill %@",skillID);
     if(skillID){
@@ -213,7 +204,6 @@
     NSLog(@"myCategorySkills %@",myCategorySkills);
     [myCategorySkills removeObjectAtIndex:indexPathSelected.row];
     NSLog(@"myCategorySkills %@",myCategorySkills);
-    
     [arraySkills removeObjectAtIndex:indexPathSelected.row];
     NSLog(@"arraySkills %@",arraySkills);
     NSArray *deleteIndexes = [[NSArray alloc] initWithObjects:[NSIndexPath indexPathForRow:indexPathSelected.row inSection:indexPathSelected.section], nil];
@@ -235,10 +225,6 @@
 -(void)responderCountAds:(int)count{
     NSLog(@"responderCountSkills");
 }
-
-//-(void)skillsLoaded:(NSArray *)arraySkills{
-//    NSLog(@"skillsLoaded");
-//}
 
 -(void)responderCountSkills:(int)count{
     NSLog(@"skillsLoaded");
@@ -270,21 +256,10 @@
     }
     else if([self.caller.title isEqualToString:@"idAddCity"]){
         NSLog(@"city: %@", self.applicationContext.citySelected);
-        self.labelCitySelected.text = self.applicationContext.citySelected.description;//[[PFUser currentUser] objectForKey:@"city"];
-        [self saveMyCity];
+        self.labelCitySelected.text = self.applicationContext.citySelected.cityDescription;
+        //[self saveMyCity];
     }
 }
-
-
-
-
-//-(void) updateCurrentUploads:(NSTimer *)timer {
-//    NSLog(@"UPDATING");
-//    if(self.uploader.stateUpload==0){
-//        [timerCurrentUploads invalidate];
-//        [self refresh];
-//    }
-//}
 
 - (void)didReceiveMemoryWarning
 {
