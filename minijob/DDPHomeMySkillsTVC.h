@@ -8,11 +8,11 @@
 
 #import <Parse/Parse.h>
 #import "DDPUser.h"
-
+#import "MBProgressHUD.h"
 
 @class DDPApplicationContext;
 
-@interface DDPHomeMySkillsTVC : UITableViewController <UITableViewDelegate, DDPUserDelegateSkills>{
+@interface DDPHomeMySkillsTVC : UITableViewController <UITableViewDelegate, DDPUserDelegateSkills, MBProgressHUDDelegate>{
     int rowsInSection;
     NSMutableArray *myCategorySkills;
     NSMutableArray *arraySkills;
@@ -20,6 +20,7 @@
     NSIndexPath *indexPathSelected;
     DDPUser *mySkills;
     CLLocation *location;
+    MBProgressHUD *hud;
 }
 @property (strong, nonatomic) DDPApplicationContext *applicationContext;
 @property (assign, nonatomic) UIViewController *caller;

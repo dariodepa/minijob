@@ -66,18 +66,25 @@
         CLLocation *location = [[CLLocation alloc] initWithLatitude:position.latitude longitude:position.longitude];
         self.labelMyCity.text = [[PFUser currentUser] valueForKey:@"city"];
         self.mapView = [self.mapController addPointAnnotation:self.mapView location:location];
+        self.toolBar.hidden = NO;
     }else if([self.applicationContext getVariable:CURRENT_POSITION]){
         CLLocation *position = (CLLocation *)[self.applicationContext getVariable:CURRENT_POSITION];
         self.mapController.latitude = position.coordinate.latitude;
         self.mapController.longitude = position.coordinate.longitude;
         self.labelMyCity.text = (NSString *)[self.applicationContext getVariable:CURRENT_CITY];
         self.mapView = [self.mapController addPointAnnotation:self.mapView location:position];
+        self.toolBar.hidden = NO;
     }else{
         self.mapController.latitude = 40.1783288;
         self.mapController.longitude = 18.1806903;
     }
+    citySelected.oid = @"";
+    citySelected.reference = @"";
+    citySelected.cityDescription = self.labelMyCity.text;
+    citySelected.location = [[CLLocation alloc] initWithLatitude:self.mapController.latitude longitude:self.mapController.longitude];
     self.mapController.radius=[[self.applicationContext.constantsPlist valueForKey:@"RADIUS_POINT"] floatValue];
     self.mapController.language = [NSString stringWithFormat:@"%@", [[NSLocale preferredLanguages] objectAtIndex:0]];
+    
 }
 
 -(void)setViewController
@@ -242,10 +249,10 @@
             [self performSegueWithIdentifier:@"returnToHomeMySkills" sender:self];
         }
     }
-    else if([self.callerViewController.title isEqualToString:@"idOptionUser"]){
+    else if([self.callerViewController.title isEqualToString:@"idAddListing"]){
         if(citySelected.oid){
             [self.wizardDictionary setObject:citySelected forKey:@"wizardCityKey"];
-            [self performSegueWithIdentifier:@"returnToOptionUser" sender:self];
+            [self performSegueWithIdentifier:@"toAddTitle" sender:self];
         }
     }
 }

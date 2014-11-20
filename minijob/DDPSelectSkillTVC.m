@@ -126,7 +126,7 @@
     textLabel.text = [cat valueForKey:@"label"];
     UIImageView *imageCell = (UIImageView *)[cell viewWithTag:102];
     
-     NSLog(@"\n\nsection: %d - row: %d", indexPath.section, indexPath.row);
+     NSLog(@"\n\nsection: %d - row: %d", (int)indexPath.section, (int)indexPath.row);
 //   [DDPImage rotateImageViewWithAnimation:imageCell duration:0.3 angle:180.0];
     
     if([arraySkills[indexPath.section] count]==1){
@@ -147,7 +147,7 @@
 {
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     if([arraySkills[indexPath.section] count] >1 && indexPath.row==0){
-        NSLog(@"Section: %d, Row:%d", indexSkillOpen.section, indexSkillOpen.row);
+        NSLog(@"Section: %d, Row:%d", (int)indexSkillOpen.section, (int)indexSkillOpen.row);
         if(indexSkillOpen.section == indexPath.section && indexSkillOpen.row == indexPath.row){
             indexSkillOpen = [NSIndexPath indexPathForRow:9999 inSection:9999];
         }else{
@@ -174,9 +174,10 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([[segue identifier] isEqualToString:@"toAddCity"]) {
-        DDPAddCityTVC *vc = [segue destinationViewController];
-        vc.applicationContext = self.applicationContext;
-        vc.callerViewController = self;
+        DDPAddCityTVC *VC = [segue destinationViewController];
+        VC.callerViewController = self;
+        VC.applicationContext = self.applicationContext;
+        VC.textHeader = NSLocalizedString(@"In che città vuoi cercare?", nil);
     }
 }
 

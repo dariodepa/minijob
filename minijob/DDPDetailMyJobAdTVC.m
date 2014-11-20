@@ -171,7 +171,7 @@
     [HUD show:YES];
     
     changeJobAd.title = self.labelTitle.text;
-    changeJobAd.description = self.labelDescription.text;
+    changeJobAd.textDescription = self.labelDescription.text;
     changeJobAd.state = self.switchState.on;
     changeJobAd.delegate = self;
     

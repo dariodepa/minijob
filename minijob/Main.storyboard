@@ -94,7 +94,7 @@
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" tag="12" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="EDAF0ED8-B7FA-47BF-8CA9-599B78C0F87D" translatesAutoresizingMaskIntoConstraints="NO" id="pjY-7C-jr3">
+                                                <imageView userInteractionEnabled="NO" tag="12" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="910F7FF8-8E13-49ED-B348-A1AAC3741016" translatesAutoresizingMaskIntoConstraints="NO" id="pjY-7C-jr3">
                                                     <rect key="frame" x="10" y="5" width="30" height="30"/>
                                                 </imageView>
                                             </subviews>
@@ -2014,10 +2014,10 @@
             </objects>
             <point key="canvasLocation" x="1016" y="-5581"/>
         </scene>
-        <!--seleziona competenza-->
+        <!--idAddListing-->
         <scene sceneID="ESS-cG-9fQ">
             <objects>
-                <tableViewController id="zc6-li-Z2M" customClass="DDPSelectSkillTVC" sceneMemberID="viewController">
+                <tableViewController title="idAddListing" id="zc6-li-Z2M" customClass="DDPSelectSkillTVC" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="W0q-le-QUh" customClass="SKSTableView">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -3020,7 +3020,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="EDAF0ED8-B7FA-47BF-8CA9-599B78C0F87D" width="52" height="52">
+        <image name="910F7FF8-8E13-49ED-B348-A1AAC3741016" width="52" height="52">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGOzxYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK0HCBEW
 GxwgISksLzU4VSRudWxs1AkKCwwNDg8QViRjbGFzc1xOU0ltYWdlRmxhZ3NWTlNSZXBzV05TQ29sb3KA
@@ -3292,12 +3292,12 @@ ONM42zjeOPA48zj4AAAAAAAAAgEAAAAAAAAAPwAAAAAAAAAAAAAAAAAAOPo
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="Y4f-E9-p9X"/>
+        <segue reference="eTg-nT-pUJ"/>
+        <segue reference="m3i-a2-Ihk"/>
         <segue reference="4ge-JM-Ohw"/>
-        <segue reference="WM7-uf-CCT"/>
         <segue reference="9tj-yo-YDz"/>
         <segue reference="R9E-JI-6eD"/>
         <segue reference="fT1-S2-jQB"/>
-        <segue reference="4wY-5u-gU2"/>
-        <segue reference="m3i-a2-Ihk"/>
     </inferredMetricsTieBreakers>
 </document>

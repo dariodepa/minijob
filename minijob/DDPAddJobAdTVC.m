@@ -46,13 +46,13 @@
     skillSelected = (DDPCategory *)[self.wizardDictionary objectForKey:@"wizardSkillKey"];
     citySelected = (DDPCity *)[self.wizardDictionary objectForKey:@"wizardCityKey"];
     
-    self.selectedCity.text = citySelected.description;
+    self.selectedCity.text = citySelected.cityDescription;
     self.titleAd.text = stringTitleAd;
     self.descriptionAd.text = stringDescriptionAd;
     self.selectedCategory.text =  skillSelected.label;
     
     nwJobAd.title = self.titleAd.text;
-    nwJobAd.description = self.descriptionAd.text;
+    nwJobAd.textDescription = self.descriptionAd.text;
     nwJobAd.categoryID = skillSelected.oid;
     nwJobAd.category = skillSelected;
     nwJobAd.city = citySelected;

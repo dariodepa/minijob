@@ -160,7 +160,7 @@
 //DELEGATE RESPONDER addSkillToProfile
 //++++++++++++++++++++++++++++++++++++++//
 -(void)responder{
-     NSLog(@"responder+++++++++++++++++++++");
+     NSLog(@"responder");
     [hud hide:YES afterDelay:1];
     [self performSegueWithIdentifier:@"returnHomeMySkills" sender:self];
 }

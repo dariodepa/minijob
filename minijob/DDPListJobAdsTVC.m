@@ -42,7 +42,7 @@
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self action:@selector(initialize) forControlEvents:UIControlEventValueChanged];
     [self.tableView setContentOffset:CGPointMake(0, -self.refreshControl.frame.size.height) animated:YES];
-    [self.refreshControl beginRefreshing];
+    //[self.refreshControl beginRefreshing];
     
     [self initialize];
 }
@@ -136,6 +136,7 @@
     labelDate.text = strDate;
     
     UILabel *labelZone = (UILabel *)[cell viewWithTag:12];
+    
     labelZone.text = [object objectForKey:@"city"];
     
     UILabel *labelTitle = (UILabel *)[cell viewWithTag:13];

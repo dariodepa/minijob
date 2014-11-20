@@ -23,7 +23,7 @@
 
 @property (nonatomic, assign) id <DDPJobAdDelegate> delegate;
 @property (strong, nonatomic) NSString *title;
-@property (strong, nonatomic) NSString *description;
+@property (strong, nonatomic) NSString *textDescription;
 @property (nonatomic, strong) NSString *userID;
 @property (nonatomic, strong) CLLocation *location;
 @property (nonatomic, strong) NSString *nameCity;

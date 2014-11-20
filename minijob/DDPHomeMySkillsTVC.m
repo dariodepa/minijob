@@ -83,6 +83,7 @@
     [arraySkills addObjectsFromArray:objects];
     [self.applicationContext setMySkills:arraySkills];
     //NSLog(@"Successfully retrieved arraySkills %@", arraySkills);
+    [hud hide:YES afterDelay:1];
     [self.refreshControl endRefreshing];
     [self.tableView reloadData];
 }
@@ -193,6 +194,10 @@
 -(void)removeSkillUsingId:(NSString *)skillID indexPath:(NSIndexPath *)indexPath{
     NSLog(@"removeSkill %@",skillID);
     if(skillID){
+        hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES]; //self.view.superview
+        hud.mode = MBProgressHUDModeIndeterminate;
+        hud.labelText = @"Uploading";
+        [hud show:YES];
         DDPUser *user =[[DDPUser alloc]init];
         user.delegateSkills = self;
         [user removeSkillToProfileUsingId:skillID];
@@ -240,7 +245,12 @@
 }
 
 - (IBAction)actionToAddSkill:(id)sender {
-    [self performSegueWithIdentifier:@"toListSkills" sender:self];
+    if(myCategorySkills.count<5){
+        [self performSegueWithIdentifier:@"toListSkills" sender:self];
+    }else{
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:@"Non puoi aggiungere più di 5 competenze" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [alert show];
+    }
 }
 
 - (IBAction)actionToAddCity:(id)sender {
