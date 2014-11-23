@@ -41,7 +41,7 @@
     arrayJobAds = [[NSMutableArray alloc] init];
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self action:@selector(initialize) forControlEvents:UIControlEventValueChanged];
-    [self.tableView setContentOffset:CGPointMake(0, -self.refreshControl.frame.size.height) animated:YES];
+    //[self.tableView setContentOffset:CGPointMake(0, -self.refreshControl.frame.size.height) animated:YES];
     //[self.refreshControl beginRefreshing];
     
     [self initialize];
@@ -49,8 +49,8 @@
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
      NSLog(@"viewWillAppear ");
-    [self.tableView setContentOffset:CGPointMake(0, -self.refreshControl.frame.size.height) animated:YES];
-    [self.refreshControl beginRefreshing];
+    //[self.tableView setContentOffset:CGPointMake(0, -self.refreshControl.frame.size.height) animated:YES];
+    //[self.refreshControl beginRefreshing];
     [self initialize];
 }
 
@@ -58,12 +58,13 @@
     [DDPCommons customizeTitle:self.navigationItem];
     [self loadJobAds];
 }
-
+//+++++++++++++++++++++++++++++++++++++//
+// LOAD my job advertisement
+//+++++++++++++++++++++++++++++++++++++//
 -(void)loadJobAds {
     NSLog(@"loadJobAds AC:");
     [jobAd loadJobAds];
 }
-
 //+++++++++++++++++++++++++++++++++++++//
 //DELEGATE DDPUserDelegateSkills
 //+++++++++++++++++++++++++++++++++++++//
@@ -136,7 +137,6 @@
     labelDate.text = strDate;
     
     UILabel *labelZone = (UILabel *)[cell viewWithTag:12];
-    
     labelZone.text = [object objectForKey:@"city"];
     
     UILabel *labelTitle = (UILabel *)[cell viewWithTag:13];

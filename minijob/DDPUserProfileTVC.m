@@ -45,14 +45,17 @@
     [self initialize];
 }
 
--(void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:YES];
-    NSLog(@"viewWillAppear");
-    [self.tableView reloadData];
-}
+//-(void)viewWillAppear:(BOOL)animated{
+//    [super viewWillAppear:animated];
+//    NSLog(@"viewWillAppear Profile");
+//    NSLog(@"user: %@ - %@", self.userProfile,[PFUser currentUser].objectId);
+//    if(![[PFUser currentUser].objectId isEqual:self.userProfile.objectId]){
+//        [self initialize];
+//    }
+//    [self.tableView reloadData];
+//}
 
 -(void)initialize{
-   
     NSLog(@"user: %@", self.userProfile);
     [DDPCommons customizeTitle:self.navigationItem];
     if(self.userProfile){
@@ -91,8 +94,13 @@
     
     arraySkills = [[NSMutableArray alloc] init];
     user.delegateSkills = self;
-    
-    [self loadImageProfile];
+    if(!self.applicationContext.myImageProfile){
+        [self loadImageProfile];
+    }else{
+        CGSize newSize = CGSizeMake(280,280);
+        self.photoProfile.image =[DDPImage scaleAndCropImage:self.applicationContext.myImageProfile intoSize:newSize];
+        [imageTool customRoundImage:self.photoProfile];
+    }
     [self basicSetup];
 }
 
@@ -106,7 +114,6 @@
         }else{
             [user countSkills:[PFUser currentUser]];
         }
-        
     }
     if([self.applicationContext getVariable:@"countAds"]){
         stringCountAds = (NSString *)[self.applicationContext getVariable:@"countAds"];
@@ -121,14 +128,13 @@
 }
 
 -(void)loadImageProfile{
-    HUD = [[MBProgressHUD alloc] initWithView:self.photoProfile];
-    [self.photoProfile addSubview:HUD];
-    HUD.mode = MBProgressHUDModeDeterminate;
-    HUD.delegate = self;
-    [HUD show:YES];
     imageTool.delegate = self;
-    [imageTool customRoundImage:self.photoProfile];
-    if(user.imageProfile && !(user.imageProfile==nil)){
+    if([[PFUser currentUser] objectForKey:@"image"] && !([[PFUser currentUser] objectForKey:@"image"]==nil)){
+        HUD = [[MBProgressHUD alloc] initWithView:self.photoProfile];
+        [self.photoProfile addSubview:HUD];
+        HUD.mode = MBProgressHUDModeDeterminate;
+        HUD.delegate = self;
+        [HUD show:YES];
         //load image
         PFFile *imageView = user.imageProfile;
         [imageTool loadImage:imageView];
@@ -138,6 +144,8 @@
         UIImage *image = [UIImage imageNamed:@"noProfile.jpg"];
         CGSize newSize = CGSizeMake(280,280);
         self.photoProfile.image =[DDPImage scaleAndCropImage:image intoSize:newSize];
+        [imageTool customRoundImage:self.photoProfile];
+        self.applicationContext.myImageProfile = image;
     }
 }
 //+++++++++++++++++++++++++++++++++++++++//
@@ -145,11 +153,13 @@
 //+++++++++++++++++++++++++++++++++++++++//
 -(void)refreshImage:(NSData *)imageData
 {
-    NSLog(@"333333-refresh");
+    NSLog(@"333333-refresh %@", HUD);
     [HUD hide:YES];
     UIImage *image = [UIImage imageWithData:imageData];
     CGSize newSize = CGSizeMake(280,280);
     self.photoProfile.image =[DDPImage scaleAndCropImage:image intoSize:newSize];
+    [imageTool customRoundImage:self.photoProfile];
+    self.applicationContext.myImageProfile = image;
 }
 
 - (void)setProgressBar:(NSIndexPath *)indexPath progress:(float)progress
@@ -323,7 +333,6 @@
         //DDPOptionUserTVC *VC = [segue destinationViewController];
         VC.applicationContext = self.applicationContext;
         VC.user=user;
-        VC.imagePhotoProfile = self.photoProfile.image;
     }
     else if ([[segue identifier] isEqualToString:@"toMySkills"]) {
 //        UINavigationController *nc = [segue destinationViewController];
@@ -352,7 +361,7 @@
 - (IBAction)returnToUserProfile:(UIStoryboardSegue*)sender
 {
     NSLog(@"returnToUserProfile:");
-    //[self initialize];
+    [self initialize];
     [self.tableView reloadData];
 }
 

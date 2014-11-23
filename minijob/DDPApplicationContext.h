@@ -24,6 +24,7 @@
 @property (nonatomic, strong) NSMutableArray *mySkills;
 @property (nonatomic, strong) PFGeoPoint *myPosition;
 @property (nonatomic, strong) NSString *myCity;
+@property (nonatomic, strong) UIImage *myImageProfile;
 
 -(void)setConstantsPlist;
 

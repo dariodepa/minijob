@@ -58,7 +58,7 @@
     nwJobAd.city = citySelected;
     nwJobAd.userID = [PFUser currentUser].objectId;
     nwJobAd.location=self.applicationContext.lastLocation;
-    nwJobAd.nameCity = citySelected.description;
+    nwJobAd.nameCity = citySelected.cityDescription;
     [self.tableView reloadData];
 }
 

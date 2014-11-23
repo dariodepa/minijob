@@ -10,9 +10,12 @@
 #import "DDPCategory.h"
 #import "DDPMap.h"
 #import "DDPUser.h"
+#import "DDPImage.h"
 @class DDPApplicationContext;
 
-@interface DDPPreloadVC : UIViewController<DDPCategoryDelegate, DDPMapDelegate, DDPUserDelegateSkills>
+@interface DDPPreloadVC : UIViewController<DDPCategoryDelegate, DDPMapDelegate, DDPUserDelegateSkills, DDPImageDownloaderDelegate>{
+    DDPImage *imageTool;
+}
 
 @property (strong, nonatomic) DDPApplicationContext *applicationContext;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;

@@ -19,4 +19,6 @@
 + (UIColor *)colorWithHexValue:(int)hexValue;
 
 + (NSInteger)daysBetweenDate:(NSDate*)fromDateTime andDate:(NSDate*)toDateTime;
+
++ (float)convertKmToMeters:(float)km;
 @end

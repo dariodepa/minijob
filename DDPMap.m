@@ -123,8 +123,8 @@
 }
 
 - (MKMapView *)addPointAnnotation:(MKMapView *)mapView location:(CLLocation *)location{
-    float spanX = 0.30725;
-    float spanY = 0.30725;
+    float spanX = 0.20725;
+    float spanY = 0.20725;
     MKCoordinateRegion region;
     region.center.latitude = location.coordinate.latitude;
     region.center.longitude = location.coordinate.longitude;

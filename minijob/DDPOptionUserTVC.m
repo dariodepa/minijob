@@ -34,36 +34,37 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:YES];
-    NSLog(@"viewWillAppear");
+    [super viewWillAppear:animated];
+    NSLog(@"viewWillAppear Modify");
+    [self initialize];
 }
 
 -(void)initialize{
     self.labelCity.text = NSLocalizedString(@"Città:", nil);
-    self.cityValue.text = self.user.location;
+    self.cityValue.text = [[PFUser currentUser] objectForKey:@"city"];//self.user.location;
     self.labelName.text = NSLocalizedString(@"Nome:", nil);
-    self.nameValue.text = self.user.first_name;
+    self.nameValue.text = [[PFUser currentUser] objectForKey:@"name"];//self.user.first_name;
     self.labelSurname.text = NSLocalizedString(@"Cognome:", nil);
-    self.surnameValue.text = self.user.last_name;
+    self.surnameValue.text = [[PFUser currentUser] objectForKey:@"surname"];//self.user.last_name;
     self.labelEmail.text = NSLocalizedString(@"Email:", nil);
-    self.emailValue.text = [self.user valueForKey:@"email"];
+    self.emailValue.text = [[PFUser currentUser] objectForKey:@"email"];//[self.user valueForKey:@"email"];
     self.labelTelephone.text = NSLocalizedString(@"Telefono:", nil);
-    self.telephoneValue.text = self.user.telephone;
+    self.telephoneValue.text = [[PFUser currentUser] objectForKey:@"telephone"];//self.user.telephone;
     self.labelRadius.text = NSLocalizedString(@"Disponibile nel raggio di:", nil);
-    if(!self.user.radius){
-        self.radiusValue.text = [NSString stringWithFormat:@"%@", [self.applicationContext.constantsPlist valueForKey:@"RADIUS_POINT"]];
-    }
-    self.radiusValue.text = [NSString stringWithFormat:@"%@", self.user.radius];
+//    if(!self.user.radius){
+//        self.radiusValue.text = [NSString stringWithFormat:@"%@", [self.applicationContext.constantsPlist valueForKey:@"RADIUS_POINT"]];
+//    }
+    self.radiusValue.text = [[[PFUser currentUser] objectForKey:@"radius"] stringValue];//[NSString stringWithFormat:@"%@", self.user.radius];
     self.labelLogout.title = NSLocalizedString(@"logout", nil);
-    NSLog(@"photoProfile %@", self.photoProfile);
-    if(self.imagePhotoProfile){
-        CGSize newSize = CGSizeMake(280,280);
-        self.photoProfile.image =[DDPImage scaleAndCropImage:self.imagePhotoProfile intoSize:newSize];
-        [imageTool customRoundImage:self.photoProfile];
-    }else{
+
+    
+    if(!self.applicationContext.myImageProfile){
         [self loadImageProfile];
+    }else{
+        CGSize newSize = CGSizeMake(280,280);
+        self.photoProfile.image =[DDPImage scaleAndCropImage:self.applicationContext.myImageProfile intoSize:newSize];
+        [imageTool customRoundImage:self.photoProfile];
     }
-    //NSLog(@"%@", self.user.radius);
 }
 
 
@@ -170,25 +171,22 @@
         image = [UIImage imageNamed:@"noProfile.jpg"];
     }
     CGSize newSize = CGSizeMake(280,280);
-    
-    self.imagePhotoProfile =[DDPImage scaleAndCropImage:image intoSize:newSize];
+    self.photoProfile.image = [DDPImage scaleAndCropImage:image intoSize:newSize];
     [imageTool customRoundImage:self.photoProfile];
-    self.photoProfile.image = self.imagePhotoProfile;
-    [imageTool saveImageWithoutDelegate:self.imagePhotoProfile nameImage:NAME_IMAGE_PROFILE key:KEY_IMAGE_PROFILE];
+    self.applicationContext.myImageProfile = image;
+    [imageTool saveImageWithoutDelegate:image nameImage:NAME_IMAGE_PROFILE key:KEY_IMAGE_PROFILE];
 }
 
 
 -(void)loadImageProfile{
-    HUD = [[MBProgressHUD alloc] initWithView:self.photoProfile];
-    [self.photoProfile addSubview:HUD];
-    HUD.mode = MBProgressHUDModeDeterminate;
-    HUD.delegate = self;
-    [HUD show:YES];
     imageTool.delegate = self;
-    [imageTool customRoundImage:self.photoProfile];
-    if(self.user.imageProfile && !(self.user.imageProfile==nil)){
-        //load image
-        PFFile *imageView = self.user.imageProfile;
+    if([[PFUser currentUser] objectForKey:@"image"] && !([[PFUser currentUser] objectForKey:@"image"]==nil)){
+        HUD = [[MBProgressHUD alloc] initWithView:self.photoProfile];
+        [self.photoProfile addSubview:HUD];
+        HUD.mode = MBProgressHUDModeDeterminate;
+        HUD.delegate = self;
+        [HUD show:YES];
+        PFFile *imageView = [[PFUser currentUser] objectForKey:@"image"];
         [imageTool loadImage:imageView];
         NSLog(@"11111111-load image");
     }else{
@@ -196,6 +194,8 @@
         UIImage *image = [UIImage imageNamed:@"noProfile.jpg"];
         CGSize newSize = CGSizeMake(280,280);
         self.photoProfile.image =[DDPImage scaleAndCropImage:image intoSize:newSize];
+        [imageTool customRoundImage:self.photoProfile];
+        self.applicationContext.myImageProfile = image;
     }
 }
 
@@ -209,6 +209,8 @@
     UIImage *image = [UIImage imageWithData:imageData];
     CGSize newSize = CGSizeMake(280,280);
     self.photoProfile.image =[DDPImage scaleAndCropImage:image intoSize:newSize];
+    [imageTool customRoundImage:self.photoProfile];
+    self.applicationContext.myImageProfile = image;
     [imageTool saveImageWithoutDelegate:self.photoProfile.image nameImage:NAME_IMAGE_PROFILE key:KEY_IMAGE_PROFILE];
 }
 
@@ -267,7 +269,6 @@
     else if ([[segue identifier] isEqualToString:@"returnToUserProfile"]) {
         DDPUserProfileTVC *VC = [segue destinationViewController];
         VC.applicationContext = self.applicationContext;
-        VC.photoProfile.image = self.imagePhotoProfile;
     }
 
     

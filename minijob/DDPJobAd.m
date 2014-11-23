@@ -65,7 +65,7 @@
     PFQuery *query = [PFQuery queryWithClassName:@"JobAd"];
     [query whereKey:@"position" nearGeoPoint:point withinKilometers:radius];
     [query whereKey:@"categoryID" containedIn:arraySkills];
-    //[query whereKey:@"userID" notEqualTo:[PFUser currentUser]];
+    [query whereKey:@"userID" notEqualTo:[PFUser currentUser]];
     [query orderByDescending:@"updatedAt"];
     [query includeKey:@"categoryID"];
     [query includeKey:@"userID"];
@@ -74,7 +74,7 @@
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             // The find succeeded.
-            NSLog(@"Successfully retrieved %d scores.", objects.count);
+            NSLog(@"Successfully retrieved %d scores.", (int)objects.count);
             // Do something with the found objects
             [self.delegate jobAdsLoaded:objects];
         } else {
@@ -95,7 +95,7 @@
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             // The find succeeded.
-            NSLog(@"Successfully retrieved %d scores.", objects.count);
+            NSLog(@"Successfully retrieved %d scores.", (int)objects.count);
             // Do something with the found objects
             [self.delegate jobAdsLoaded:objects];
         } else {

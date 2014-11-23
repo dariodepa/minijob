@@ -9,18 +9,23 @@
 #import <UIKit/UIKit.h>
 #import "DDPJobAd.h"
 #import "DDPUser.h"
+#import "DDPMap.h"
 
 @class DDPApplicationContext;
-
-@interface DDPListJobAdsNearMe : UITableViewController<DDPJobAdDelegate, DDPUserDelegateSkills>{
+@interface DDPListJobAdsNearMe : UITableViewController<MKMapViewDelegate, DDPJobAdDelegate, DDPUserDelegateSkills, DDPMapDelegate>{
     DDPJobAd *jobAd;
     DDPUser *userProfile;
     NSMutableArray *arraySkills;
-    CGFloat radius;
+    int radius;
+    CLLocation *location;
     NSArray *arrayJobAds;
     PFObject *adSelected;
+    NSString *cityName;
 }
 
 @property (strong, nonatomic) DDPApplicationContext *applicationContext;
+@property (weak, nonatomic) IBOutlet UILabel *labelHeader;
+@property (weak, nonatomic) IBOutlet MKMapView *mapView;
+@property (nonatomic, strong) DDPMap *mapController;
 
 @end

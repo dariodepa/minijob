@@ -30,8 +30,6 @@ UIAlertView *categoriesAlertView;
     }
     NSLog(@"self.applicationContext.constantsPlist: %@",self.applicationContext);
     [self.activityIndicator startAnimating];
-    
-    
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -46,20 +44,23 @@ UIAlertView *categoriesAlertView;
 }
 
 - (void)initialize{
-    NSLog(@"initialize PRELOAD");
     if (![self.applicationContext getVariable:LAST_LOADED_CATEGORIES]) {
+        //NSLog(@"LAST_LOADED_CATEGORIES PRELOAD");
         [self loadCategories];
     }else if(![self.applicationContext getVariable:CURRENT_POSITION]){
         [self setCurrentLocation];
     }else if([self.applicationContext getVariable:CURRENT_POSITION] && ![self.applicationContext getVariable:CURRENT_CITY]){
-         NSLog(@"setCurrentCity PRELOAD");
+         //NSLog(@"setCurrentCity PRELOAD");
         [self setCurrentCity];
     }else if(!self.applicationContext.mySkills){
-        NSLog(@"setCurrentCity PRELOAD");
+        //NSLog(@"setCurrentCity PRELOAD");
         [self loadMySkills];
+    }else if(!self.applicationContext.myImageProfile){
+        //NSLog(@"loadMyImageProfile PRELOAD");
+        [self loadMyImageProfile];
     }
     else{
-         NSLog(@"saveModifyUser PRELOAD");
+         //NSLog(@"saveModifyUser PRELOAD");
         [self saveModifyUser];
         [self dismissionController];
     }
@@ -95,7 +96,6 @@ UIAlertView *categoriesAlertView;
 // ************ END LOAD POSITION MAP **************
 
 
-
 // ************ 3 LOAD SETTING CITY NAME ****************
 -(void)setCurrentCity{
     [self.applicationContext removeObjectForKey:CURRENT_CITY];
@@ -119,8 +119,8 @@ UIAlertView *categoriesAlertView;
     mySkills.delegateSkills = self;
     [mySkills loadSkills:[PFUser currentUser]];
 }
+
 //DELEGATE
-//+++++++++++++++++++++++++++++++++++++++//
 -(void)skillsLoaded:(NSArray *)objects{
     NSMutableArray *arraySkills = [[NSMutableArray alloc] init];
     [arraySkills addObjectsFromArray:objects];
@@ -129,6 +129,39 @@ UIAlertView *categoriesAlertView;
     //NSLog(@"Successfully retrieved arraySkills %@", arraySkills);
 }
 // ************ END LOAD MY SKILLS **************
+
+
+// ************ 5 LOAD MY IMAGE PROFILE ****************
+-(void)loadMyImageProfile{
+    NSLog(@"loadMyImageProfile");
+    imageTool = [[DDPImage alloc] init];
+    imageTool.delegate = self;
+    PFFile *imageView = [[PFUser currentUser] objectForKey:@"image"];
+    NSLog(@"imageView : %@",imageView);
+    if(imageView){
+        [imageTool loadImage:imageView];
+    }else{
+        self.applicationContext.myImageProfile = [UIImage imageNamed:@"noProfile.jpg"];
+        [self initialize];
+    }
+}
+//+++++++++++++++++++++++++++++++++++++++//
+//DELEGATE DDPImageDownloaderDelegate
+//+++++++++++++++++++++++++++++++++++++++//
+-(void)refreshImage:(NSData *)imageData
+{
+    UIImage *image = [UIImage imageWithData:imageData];
+    self.applicationContext.myImageProfile = image;
+    NSLog(@"loadMyImageProfile %@",self.applicationContext.myImageProfile);
+    [self initialize];
+}
+
+- (void)setProgressBar:(NSIndexPath *)indexPath progress:(float)progress
+{
+   // NSLog(@"2222222-progress %f", progress);
+}
+// ************ END LOAD MY IMAGE PROFILE **************
+
 
 //************ DISMISSION CONTROLLER *******************
 -(void)dismissionController {

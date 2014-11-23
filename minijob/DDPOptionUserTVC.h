@@ -25,7 +25,6 @@
 @property (strong, nonatomic) DDPApplicationContext *applicationContext;
 @property (assign, nonatomic) UIViewController *caller;
 @property (strong, nonatomic) DDPUser *user;
-@property (strong, nonatomic) UIImage *imagePhotoProfile;
 @property (weak, nonatomic) IBOutlet UILabel *labelCity;
 @property (weak, nonatomic) IBOutlet UILabel *cityValue;
 @property (weak, nonatomic) IBOutlet UILabel *labelName;

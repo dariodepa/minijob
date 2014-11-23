@@ -22,6 +22,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    NSLog(@"viewDidLoad Modify");
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
                                    initWithTarget:self
                                    action:@selector(dismissKeyboard)];
@@ -29,6 +30,7 @@
     [self.view addGestureRecognizer:tap];
     [self initialize];
 }
+
 
 -(void)initialize{
     NSLog(@"initialize %@",self.caller);

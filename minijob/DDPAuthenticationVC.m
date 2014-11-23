@@ -48,6 +48,7 @@ static NSString *SESSION_TOKEN = @"sessionToken";
     self.labelFacebookLogin.text = NSLocalizedString(@"accedi tramite facebook", nil);
     self.labelEmailLogin.text = NSLocalizedString(@"accedi tramite email", nil);
     self.labelSigIn.text = NSLocalizedString(@"registrati", nil);
+    self.applicationContext.myImageProfile = nil;
     
 //    NSString *sessionToken = [[NSUserDefaults standardUserDefaults] objectForKey:@"sessionToken"];
 //    NSLog(@"initialize current user : %@", sessionToken);

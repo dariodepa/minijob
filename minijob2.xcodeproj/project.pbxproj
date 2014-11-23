@@ -487,6 +487,13 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		DC54BD631A21E20A00F2E6C9 /* elNav */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = elNav;
+			sourceTree = "<group>";
+		};
 		DCAE0CDD193671F700046924 /* Images */ = {
 			isa = PBXGroup;
 			children = (
@@ -601,6 +608,7 @@
 		DCBCDE3F19A6891E0082499C /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				DC54BD631A21E20A00F2E6C9 /* elNav */,
 				DC7CB9E81A17B1C400B82B93 /* DDPConstants.h */,
 				DC7CB9E91A17B1C400B82B93 /* DDPConstants.m */,
 				DCBCDE4319A7310D0082499C /* DDPChat.h */,

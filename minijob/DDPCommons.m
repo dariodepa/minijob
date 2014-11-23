@@ -81,4 +81,9 @@
     return [difference day];
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+
++ (float)convertKmToMeters:(float)km{
+    return (km*1000);
+}
+
 @end
