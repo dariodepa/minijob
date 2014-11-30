@@ -15,21 +15,21 @@
     self.stateUpload++;
     NSLog(@"addSkills %@ %d",categoryID, self.stateUpload);
     DDPUser *user =[[DDPUser alloc]init];
-    user.delegateSkills = self;
+    user.delegate = self;
     [user addSkillToProfile:categoryID.objectId];
 }
 
 -(void)removeSkill:(PFObject *)categoryID{
     NSLog(@"removeSkill %@",categoryID);
     DDPUser *user =[[DDPUser alloc]init];
-    user.delegateSkills = self;
+    user.delegate = self;
     [user removeSkillToProfile:categoryID.objectId];
 }
 
 -(void)removeSkillUsingId:(NSString *)skillID{
     NSLog(@"removeSkill %@",skillID);
     DDPUser *user =[[DDPUser alloc]init];
-    user.delegateSkills = self;
+    user.delegate = self;
     [user removeSkillToProfileUsingId:skillID];
 }
 

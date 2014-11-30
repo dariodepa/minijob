@@ -12,7 +12,7 @@
 
 @class DDPApplicationContext;
 
-@interface DDPHomeMySkillsTVC : UITableViewController <UITableViewDelegate, DDPUserDelegateSkills, MBProgressHUDDelegate>{
+@interface DDPHomeMySkillsTVC : UITableViewController <UITableViewDelegate, DDPUserDelegate, MBProgressHUDDelegate>{
     int rowsInSection;
     NSMutableArray *myCategorySkills;
     NSMutableArray *arraySkills;
@@ -25,6 +25,9 @@
 @property (strong, nonatomic) DDPApplicationContext *applicationContext;
 @property (assign, nonatomic) UIViewController *caller;
 @property (strong, nonatomic) PFObject *nwSkill;
+
+@property (weak, nonatomic) IBOutlet UIToolbar *toolBarAddSkill;
+
 
 
 @property (weak, nonatomic) IBOutlet UILabel *labelCitySelected;

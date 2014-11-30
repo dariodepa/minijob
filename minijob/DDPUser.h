@@ -7,25 +7,29 @@
 //
 
 #import <Foundation/Foundation.h>
+
+
 @class DDPCity;
+@class DDPApplicationContext;
 
 @protocol DDPUserDelegate
 - (void)getUserImageProfileReturn:(PFFile *)fileData;
 - (void)removeUserImageProfileReturn;
+- (void)loadUserProfileReturn:(PFObject *)object;
+- (void)countAdsReturn:(int)count;
+- (void)loadSkillsReturn:(NSArray *)arraySkills;
+- (void)responderCountSkills:(int)count;
+- (void)responder;
+- (NSString *)responderId;
 @end
 
-@protocol DDPUserDelegateSkills
-- (void)responderCountSkills:(int)count;
-- (void)responderCountAds:(int)count;
-- (void)responder;
-- (void)skillsLoaded:(NSArray *)arraySkills;
-@end
 
 
 @interface DDPUser : NSObject
 
+@property (strong, nonatomic) DDPApplicationContext *applicationContext;
 @property(nonatomic, assign) id <DDPUserDelegate> delegate;
-@property(nonatomic, assign) id <DDPUserDelegateSkills> delegateSkills;
+//@property(nonatomic, assign) id <DDPUserDelegateSkills> delegateSkills;
 @property(strong, nonatomic) NSString *userOid;
 @property(strong, nonatomic) NSString *facebookId;
 @property(strong, nonatomic) NSDate *birthday;
@@ -49,11 +53,13 @@
 -(void)removeImageProfile:(PFUser *)user socialId:(NSString *)socialId forDelegate:(id<DDPUserDelegate>)delegate;
 
 //DDPUserDelegateSkills
+-(void)loadUserProfile:(NSString *)idProfile;
 -(void)addSkillToProfile:(NSString *)categoryID;
 -(void)removeSkillToProfile:(NSString *)categoryID;
 -(void)removeSkillToProfileUsingId:(NSString *)skillID;
 -(void)loadSkills:(PFUser *)user;
 -(void)countSkills:(PFUser *)user;
 -(void)countAds:(PFUser *)user;
+
 
 @end

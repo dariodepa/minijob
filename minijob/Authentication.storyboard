@@ -607,8 +607,8 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="lOd-eN-Oe2"/>
         <segue reference="BhU-z9-eZX"/>
-        <segue reference="0Xf-Oy-J8s"/>
         <segue reference="SS7-B7-pju"/>
     </inferredMetricsTieBreakers>
 </document>

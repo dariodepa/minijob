@@ -36,9 +36,8 @@
         self.applicationContext = appDelegate.applicationContext;
     }
     
-    
     userProfile = [[DDPUser alloc] init];
-    userProfile.delegateSkills = self;
+    userProfile.delegate = self;
     jobAd = [[DDPJobAd alloc] init];
     
     arraySkills = [[NSMutableArray alloc] init];
@@ -46,13 +45,10 @@
     self.mapController.delegate=self;
     self.mapView.delegate = self;
     
-    
-    
-    
-    self.refreshControl = [[UIRefreshControl alloc] init];
-    [self.refreshControl addTarget:self action:@selector(initialize) forControlEvents:UIControlEventValueChanged];
-    [self.tableView setContentOffset:CGPointMake(0, -self.refreshControl.frame.size.height) animated:YES];
-    [self.refreshControl beginRefreshing];
+//    self.refreshControl = [[UIRefreshControl alloc] init];
+//    [self.refreshControl addTarget:self action:@selector(initialize) forControlEvents:UIControlEventValueChanged];
+//    [self.tableView setContentOffset:CGPointMake(0, -self.refreshControl.frame.size.height) animated:YES];
+//    [self.refreshControl beginRefreshing];
     
     [self initialize];
 }
@@ -63,7 +59,18 @@
     [self.mapView removeAnnotations:self.mapView.annotations];
     [self.mapView removeOverlays:[self.mapView overlays]];
     [self initialize];
-    [self.tableView reloadData];
+    //[self.tableView reloadData];
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    self.applicationContext.visibleViewController = self;
+    //NSLog(@"..................................viewDidAppear %@", self.applicationContext.visibleViewController);
+}
+
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    self.applicationContext.visibleViewController = nil;
 }
 
 -(void)initialize{
@@ -72,7 +79,7 @@
     //[self loadMyPosition];
     //[self loadMyRadius];
     //[self loadMyCity];
-    self.labelHeader.text = [[NSString alloc] initWithFormat:@"%@ %@ %@ %dKm",NSLocalizedString(@"AnnunciVicinoALKey", nil),cityName,NSLocalizedString(@"NelRaggioDiLKey", nil),radius];
+    self.labelHeader.text = [[NSString alloc] initWithFormat:@"%@ %dKm %@\n %@",NSLocalizedString(@"Annunci Nel Raggio Di LKey", nil),radius,NSLocalizedString(@"da:", nil),cityName];
     [self loadMySkills];
 }
 
@@ -148,14 +155,14 @@
 //    NSLog(@"loadMyCity %@",self.applicationContext.myCity);
 //}
 
-//DELEGATE DDPUserDelegateSkills
+//DELEGATE DDPUserDelegate
 //----------------------------------------//
--(void)skillsLoaded:(NSArray *)objects{
+-(void)loadSkillsReturn:(NSArray *)objects{
     for (PFObject *object in objects) {
         PFObject *skill = object[@"categoryID"];
         [arraySkills addObject:skill];
     }
-    //NSLog(@"arrayCategories %@", arraySkills);
+    NSLog(@"arrayCategories %@", arraySkills);
     self.applicationContext.mySkills = arraySkills;
     [self loadAdsMySkillsNearMe];
 }
@@ -179,7 +186,7 @@
 -(void)jobAdsLoaded:(NSArray *)objects{
     NSLog(@"object: %@",objects);
     arrayJobAds = [[NSArray alloc] initWithArray:objects];
-    [self.refreshControl endRefreshing];
+    //[self.refreshControl endRefreshing];
     [self.tableView reloadData];
 }
 
@@ -193,7 +200,20 @@
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     //if(section==0)return @"RICHIESTE ";
     return nil;
+    //return @"HEADER";
 }
+
+//- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+//{
+//    //return nil;
+//    NSLog(@"viewForHeaderInSection");
+//    UILabel *label = [UILabel new];
+//    label.text = [@"  " stringByAppendingString:@"ciao"];
+//    label.backgroundColor = [UIColor colorWithWhite:0.97f alpha:1.0];
+//    label.textColor = [UIColor colorWithWhite:0.13f alpha:1.0];
+//    label.font = [UIFont boldSystemFontOfSize:14.0f];
+//    return label;
+//}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -242,11 +262,12 @@
     UILabel *labelCategory = (UILabel *)[cell viewWithTag:14];
     labelCategory.text = [cat objectForKey:@"label"];
     
-    UIImage *imageState= (UIImage *)[cell viewWithTag:16];
-    if(object[@"state"]>0){
-        imageState = [UIImage imageNamed:@"unlock.png"];
+    UIImageView *imageState= (UIImageView *)[cell viewWithTag:16];
+    NSLog(@"state: %d",(int)[object[@"state"] integerValue]);
+    if([object[@"state"] integerValue]>0){
+        imageState.image = [UIImage imageNamed:@"unlock.png"];
     }else{
-        imageState = [UIImage imageNamed:@"lock.png"];
+        imageState.image = [UIImage imageNamed:@"lock.png"];
     }
     
     UILabel *labelMessage = (UILabel *)[cell viewWithTag:15];

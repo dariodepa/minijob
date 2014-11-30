@@ -53,6 +53,16 @@
     //[self.refreshControl beginRefreshing];
     [self initialize];
 }
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    self.applicationContext.visibleViewController = self;
+    //NSLog(@"..................................viewDidAppear %@", self.applicationContext.visibleViewController);
+}
+
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    self.applicationContext.visibleViewController = nil;
+}
 
 -(void)initialize{
     [DDPCommons customizeTitle:self.navigationItem];

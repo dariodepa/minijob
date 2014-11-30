@@ -10,6 +10,8 @@
 @class DDPCity;
 
 @interface DDPApplicationContext : NSObject
+
+@property(nonatomic, assign) id visibleViewController;
 @property (strong, nonatomic) NSMutableDictionary *userProfile;
 @property (nonatomic, strong) NSMutableDictionary *constantsPlist;
 
@@ -25,9 +27,10 @@
 @property (nonatomic, strong) PFGeoPoint *myPosition;
 @property (nonatomic, strong) NSString *myCity;
 @property (nonatomic, strong) UIImage *myImageProfile;
+@property (nonatomic, assign) int myNumAds;
+@property (nonatomic, assign) int myNearMeNumAds;
 
--(void)setConstantsPlist;
-
+- (void)setConstantsPlist;
 - (void)setMyPosition;
 - (void)setMyCity;
 

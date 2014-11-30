@@ -15,6 +15,8 @@
 #import "DDPApplicationContext.h"
 #import "DDPCommons.h"
 #import "DDPConstants.h"
+#import "DDPAppDelegate.h"
+
 @interface DDPHomeMySkillsTVC ()
 @end
 
@@ -24,6 +26,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    if(!self.applicationContext){
+        DDPAppDelegate *appDelegate = (DDPAppDelegate *)[[UIApplication sharedApplication] delegate];
+        self.applicationContext = appDelegate.applicationContext;
+    }
     [DDPCommons customizeTitle:self.navigationItem];
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self action:@selector(initialize) forControlEvents:UIControlEventValueChanged];
@@ -31,18 +37,24 @@
     //[self.refreshControl beginRefreshing];
     myCategorySkills = [[NSMutableArray alloc] init];
     mySkills = [[DDPUser alloc] init];
-    
-    [self initialize];
+    [self.toolBarAddSkill setAlpha:0.5];
+    //[self initialize];
 }
 
--(void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:animated];
+
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    self.applicationContext.visibleViewController = self;
     [self initialize];
+     //NSLog(@"..................................viewDidAppear %@", self.applicationContext.visibleViewController);
 }
 
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    self.applicationContext.visibleViewController = nil;
+}
 
 -(void)initialize{
-    [self loadMyCity];
     //NSLog(@"my shills: %@",self.applicationContext.mySkills);
      if(!self.applicationContext.mySkills){
          [self loadMySkills];
@@ -50,7 +62,8 @@
          arraySkills = self.applicationContext.mySkills;
          [self.refreshControl endRefreshing];
          [self.tableView reloadData];
-     }
+    }
+    [self loadMyCity];
 }
 
 -(void)loadMyCity{
@@ -73,18 +86,20 @@
 -(void)loadMySkills{
     NSLog(@"loadMySkills");
     [self.refreshControl beginRefreshing];
-    mySkills.delegateSkills = self;
+    mySkills.delegate = self;
     [mySkills loadSkills:[PFUser currentUser]];
 }
-//DELEGATE
+//DELEGATE loadSkills
 //+++++++++++++++++++++++++++++++++++++++//
--(void)skillsLoaded:(NSArray *)objects{
+-(void)loadSkillsReturn:(NSArray *)objects{
     arraySkills = [[NSMutableArray alloc] init];
     [arraySkills addObjectsFromArray:objects];
-    [self.applicationContext setMySkills:arraySkills];
-    //NSLog(@"Successfully retrieved arraySkills %@", arraySkills);
+    self.applicationContext.mySkills = arraySkills;
+    //[self.applicationContext setMySkills:arraySkills];
+    NSLog(@"Successfully retrieved arraySkills %@", arraySkills);
     [hud hide:YES afterDelay:1];
     [self.refreshControl endRefreshing];
+    [self.toolBarAddSkill setAlpha:1];
     [self.tableView reloadData];
 }
 //+++++++++++++++++++++++++++++++++++++++//
@@ -150,6 +165,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:@"Sei sicuro di voler eliminare la competenza?" delegate:self cancelButtonTitle:@"NO" otherButtonTitles:@"SI", nil];
     [alert show];
     indexPathSelected = indexPath;
@@ -199,7 +215,7 @@
         hud.labelText = @"Uploading";
         [hud show:YES];
         DDPUser *user =[[DDPUser alloc]init];
-        user.delegateSkills = self;
+        user.delegate = self;
         [user removeSkillToProfileUsingId:skillID];
         [self removeRowFromTable];
     }
@@ -222,6 +238,10 @@
 //++++++++++++++++++++++++++++++++++++++++++++//
 //delegate removeSkillToProfileUsingId
 //++++++++++++++++++++++++++++++++++++++++++++//
+-(NSString*)responderId{
+    return @"1";
+}
+
 -(void)responder{
     NSLog(@"refresh");
     [self loadMySkills];
@@ -237,7 +257,6 @@
 //++++++++++++++++++++++++++++++++++++++++++++//
 
 
-
 /*****************************************************************/
 
 - (IBAction)actionExit:(id)sender {
@@ -245,9 +264,10 @@
 }
 
 - (IBAction)actionToAddSkill:(id)sender {
-    if(myCategorySkills.count<5){
+    NSLog(@"self.applicationContext.mySkills %@",self.applicationContext.mySkills);
+    if(myCategorySkills.count<5 && self.applicationContext.mySkills){
         [self performSegueWithIdentifier:@"toListSkills" sender:self];
-    }else{
+    }else if(self.applicationContext.mySkills){
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:@"Non puoi aggiungere più di 5 competenze" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [alert show];
     }

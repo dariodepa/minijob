@@ -44,26 +44,31 @@ UIAlertView *categoriesAlertView;
 }
 
 - (void)initialize{
+    
     if (![self.applicationContext getVariable:LAST_LOADED_CATEGORIES]) {
-        //NSLog(@"LAST_LOADED_CATEGORIES PRELOAD");
+        NSLog(@"LAST_LOADED_CATEGORIES PRELOAD");
         [self loadCategories];
     }else if(![self.applicationContext getVariable:CURRENT_POSITION]){
+        NSLog(@"CURRENT_POSITION PRELOAD");
         [self setCurrentLocation];
     }else if([self.applicationContext getVariable:CURRENT_POSITION] && ![self.applicationContext getVariable:CURRENT_CITY]){
-         //NSLog(@"setCurrentCity PRELOAD");
+         NSLog(@"setCurrentCity PRELOAD");
         [self setCurrentCity];
-    }else if(!self.applicationContext.mySkills){
-        //NSLog(@"setCurrentCity PRELOAD");
-        [self loadMySkills];
-    }else if(!self.applicationContext.myImageProfile){
-        //NSLog(@"loadMyImageProfile PRELOAD");
-        [self loadMyImageProfile];
-    }
-    else{
-         //NSLog(@"saveModifyUser PRELOAD");
-        [self saveModifyUser];
+    }else{
         [self dismissionController];
     }
+    //else if(!self.applicationContext.mySkills){
+        //NSLog(@"setCurrentCity PRELOAD");
+        //[self loadMySkills];
+    //}else if(!self.applicationContext.myImageProfile){
+        //NSLog(@"loadMyImageProfile PRELOAD");
+        //[self loadMyImageProfile];
+    //}else{
+         //NSLog(@"saveModifyUser PRELOAD");
+        //[self saveModifyUser];
+        
+    //}
+    
 }
 
 // ************ 1 LOAD CATEGORIES **************
@@ -116,7 +121,7 @@ UIAlertView *categoriesAlertView;
 -(void)loadMySkills{
     NSLog(@"loadMySkills");
     DDPUser *mySkills = [[DDPUser alloc] init];
-    mySkills.delegateSkills = self;
+    mySkills.delegate = self;
     [mySkills loadSkills:[PFUser currentUser]];
 }
 

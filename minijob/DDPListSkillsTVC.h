@@ -14,7 +14,7 @@
 @class DDPApplicationContext;
 
 
-@interface DDPListSkillsTVC : UITableViewController <UITableViewDelegate, DDPCategoryDelegate, DDPUserDelegateSkills, MBProgressHUDDelegate>{
+@interface DDPListSkillsTVC : UITableViewController <UITableViewDelegate, DDPCategoryDelegate, DDPUserDelegate, MBProgressHUDDelegate>{
     NSMutableArray *arrayCategories;
     MBProgressHUD *hud;
 }

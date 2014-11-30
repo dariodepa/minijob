@@ -85,6 +85,30 @@
     }];
 }
 
+-(void)countAdsMySkillsNearMe:(PFGeoPoint *)point skills:(NSArray *)arraySkills radius:(CGFloat)radius{
+    PFQuery *query = [PFQuery queryWithClassName:@"JobAd"];
+    [query whereKey:@"position" nearGeoPoint:point withinKilometers:radius];
+    [query whereKey:@"categoryID" containedIn:arraySkills];
+    [query whereKey:@"userID" notEqualTo:[PFUser currentUser]];
+    [query orderByDescending:@"updatedAt"];
+    [query includeKey:@"categoryID"];
+    [query includeKey:@"userID"];
+    //query.limit = 10;
+    //Final list of objects
+    [query countObjectsInBackgroundWithBlock:^(int count, NSError *error) {
+        if (!error) {
+            // The find succeeded.
+            NSLog(@"Successfully retrieved %d scores.", count);
+            // Do something with the found objects
+            [self.delegate countAdsMySkillsNearMeReturn:count];
+        } else {
+            // Log details of the failure
+            NSLog(@"Error: %@ %@", error, [error userInfo]);
+            [self.delegate alertError:@"noLoadedCategory"];
+        }
+    }];
+}
+
 - (void)loadJobAds{
     NSLog(@"viewDidLoad ");
     NSString *idUser = [PFUser currentUser].objectId;

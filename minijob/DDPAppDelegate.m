@@ -39,6 +39,7 @@
     self.applicationContext = context;
     
     [self.applicationContext setConstantsPlist];
+    
     return YES;
 }
 

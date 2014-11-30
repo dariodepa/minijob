@@ -12,7 +12,7 @@
 #import "DDPMap.h"
 
 @class DDPApplicationContext;
-@interface DDPListJobAdsNearMe : UITableViewController<MKMapViewDelegate, DDPJobAdDelegate, DDPUserDelegateSkills, DDPMapDelegate>{
+@interface DDPListJobAdsNearMe : UITableViewController<MKMapViewDelegate, DDPJobAdDelegate, DDPUserDelegate, DDPMapDelegate>{
     DDPJobAd *jobAd;
     DDPUser *userProfile;
     NSMutableArray *arraySkills;

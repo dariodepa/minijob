@@ -7,8 +7,39 @@
 //
 
 #import "DDPUser.h"
+#import "DDPApplicationContext.h"
+#import "DDPAppDelegate.h"
 
 @implementation DDPUser
+
+- (id)init {
+    if (self = [super init]) {
+        if(!self.applicationContext){
+            DDPAppDelegate *appDelegate = (DDPAppDelegate *)[[UIApplication sharedApplication] delegate];
+            self.applicationContext = appDelegate.applicationContext;
+        }
+    }
+    return self;
+}
+
+-(void)loadUserProfile:(NSString *)idProfile{
+    NSLog(@"user.objectId: %@", idProfile);
+    PFQuery *query = [PFQuery queryWithClassName:@"_User"];
+    [query whereKey:@"objectId" equalTo:idProfile];
+    [query getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+        if (!error) {
+            NSLog(@"no error: %@",object);
+            [self.delegate loadUserProfileReturn:object];
+        }
+        else{
+            NSLog(@"error: %@", error);
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upload Failure" message:[error localizedDescription] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            [alert show];
+        }
+    }];
+}
+
+
 
 
 -(void)getImageProfile:(PFUser *)user forDelegate:(id<DDPUserDelegate>)delegate
@@ -76,14 +107,14 @@
                 [newSkill saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                     if (!error) {
                         NSLog(@"delegateSkills");
-                        [self.delegateSkills responder];
+                        [self.delegate responder];
                     } else {
                         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upload Failure" message:[error localizedDescription] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
                         [alert show];
                     }
                 }];
             }else{
-                [self.delegateSkills responder];
+                [self.delegate responder];
             }
         } else {
             //            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upload Failure" message:[error localizedDescription] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
@@ -101,7 +132,7 @@
         if (!error) {
             for (PFObject *skill in skillDelete) {
                 //[skill  deleteInBackground];
-                [skill deleteInBackgroundWithTarget:self.delegateSkills selector:@selector(responder)];
+                [skill deleteInBackgroundWithTarget:self.delegate selector:@selector(responder)];
             }
             //[delegate refresh];
         } else {
@@ -120,7 +151,7 @@
         // Do something with the returned PFObject in the gameScore variable.
         NSLog(@"ERROR %@, %@", error,object);
         if(!error){
-            [object deleteInBackgroundWithTarget:self.delegateSkills selector:@selector(responder)];
+            [object deleteInBackgroundWithTarget:self.delegate selector:@selector(responder)];
         }
     }];
 }
@@ -131,40 +162,52 @@
     [query countObjectsInBackgroundWithBlock:^(int count, NSError *error) {
         if (!error) {
             NSLog(@"countSkills %d games", count);
-            [self.delegateSkills responderCountSkills:count];
-        }
-    }];
-}
-
--(void)countAds:(PFUser *)user{
-    PFQuery *query = [PFQuery queryWithClassName:@"JobAd"];
-    [query whereKey:@"userID" equalTo:user];//[PFUser currentUser]];
-    [query countObjectsInBackgroundWithBlock:^(int count, NSError *error) {
-        if (!error) {
-            NSLog(@"countAds %d games", count);
-            [self.delegateSkills responderCountAds:count];
+            [self.delegate responderCountSkills:count];
         }
     }];
 }
 
 -(void)loadSkills:(PFUser *)user
 {
+    NSLog(@"******* loadSkills");
     PFQuery *query = [PFQuery queryWithClassName:@"SkillsUser"];
     [query whereKey:@"userID" equalTo:user];//[PFUser currentUser]];
     [query orderByDescending:@"updatedAt"];
     [query includeKey:@"categoryID"];
     query.cachePolicy = kPFCachePolicyIgnoreCache;
+    id visibleVC = self.delegate;
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             NSLog(@"Successfully retrieved %lu scores.", (unsigned long)objects.count);
-            [self.delegateSkills skillsLoaded:objects];
+            NSLog(@"^^^^^^^^^^^^^^^^^^^^^^");
+            NSLog(@"OK********** %@ - %@", self.applicationContext.visibleViewController , visibleVC);
+            if(self.applicationContext.visibleViewController == visibleVC){
+                [self.delegate loadSkillsReturn:objects];
+            }
+            
         } else {
             // Log details of the failure
             NSLog(@"Error: %@ %@", error, [error userInfo]);
+            [self.delegate loadSkillsReturn:nil];
         }
     }];
 }
-//++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+-(void)countAds:(PFUser *)user
+{
+    PFQuery *query = [PFQuery queryWithClassName:@"JobAd"];
+    [query whereKey:@"userID" equalTo:user];//[PFUser currentUser]];
+    [query countObjectsInBackgroundWithBlock:^(int count, NSError *error) {
+        if (!error) {
+            NSLog(@"countAds %d games", count);
+            [self.delegate countAdsReturn:count];
+        }else{
+            [self.delegate countAdsReturn:0];
+        }
+    }];
+}
+
+
 
 
 @end

@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "DDPUser.h"
 
-@interface DDPUplooaderDC : NSObject<DDPUserDelegateSkills>
+@interface DDPUplooaderDC : NSObject<DDPUserDelegate>
 
 @property(strong, nonatomic) UIViewController *callerViewController;
 @property (assign, nonatomic) NSInteger stateUpload;

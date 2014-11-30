@@ -153,7 +153,7 @@
     //nwSkill = object;
     NSLog(@"indexOfObject: %lu, %@",(unsigned long)[arrayCategories indexOfObject:object], object);
     DDPUser *user =[[DDPUser alloc]init];
-    user.delegateSkills=self;
+    user.delegate=self;
     [user addSkillToProfile:object.objectId];
 }
 //++++++++++++++++++++++++++++++++++++++//

@@ -26,7 +26,6 @@
     NSLog(@"caller: %@",self.callerViewController.title);
     [DDPCommons customizeTitle:self.navigationItem];
     self.searchDisplayController.searchResultsDelegate=self;
-    self.toolBar.hidden = YES;
     
     citySelected = [[DDPCity alloc] init];
     self.arraySearch = [[NSMutableArray alloc]init];
@@ -66,14 +65,14 @@
         CLLocation *location = [[CLLocation alloc] initWithLatitude:position.latitude longitude:position.longitude];
         self.labelMyCity.text = [[PFUser currentUser] valueForKey:@"city"];
         self.mapView = [self.mapController addPointAnnotation:self.mapView location:location];
-        self.toolBar.hidden = NO;
+        //self.toolBar.hidden = NO;
     }else if([self.applicationContext getVariable:CURRENT_POSITION]){
         CLLocation *position = (CLLocation *)[self.applicationContext getVariable:CURRENT_POSITION];
         self.mapController.latitude = position.coordinate.latitude;
         self.mapController.longitude = position.coordinate.longitude;
         self.labelMyCity.text = (NSString *)[self.applicationContext getVariable:CURRENT_CITY];
         self.mapView = [self.mapController addPointAnnotation:self.mapView location:position];
-        self.toolBar.hidden = NO;
+        //self.toolBar.hidden = NO;
     }else{
         self.mapController.latitude = 40.1783288;
         self.mapController.longitude = 18.1806903;

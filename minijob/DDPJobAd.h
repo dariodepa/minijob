@@ -11,6 +11,7 @@
 @protocol DDPJobAdDelegate
 - (void)responder;
 - (void)jobAdsLoaded:(NSArray *)objects;
+- (void)countAdsMySkillsNearMeReturn:(int)count;
 - (void)alertError:(NSString *)error;
 @end
 
@@ -38,5 +39,6 @@
 -(void)saveJobAdWithId:(DDPJobAd *)jobAdtoSave objectId:(NSString *)objectId;
 
 -(void)loadAdsMySkillsNearMe:(PFGeoPoint *)point skills:(NSArray *)arraySkills radius:(CGFloat)radius;
+-(void)countAdsMySkillsNearMe:(PFGeoPoint *)point skills:(NSArray *)arraySkills radius:(CGFloat)radius;
 -(void)loadJobAds;
 @end

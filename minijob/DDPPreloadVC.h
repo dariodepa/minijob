@@ -13,7 +13,7 @@
 #import "DDPImage.h"
 @class DDPApplicationContext;
 
-@interface DDPPreloadVC : UIViewController<DDPCategoryDelegate, DDPMapDelegate, DDPUserDelegateSkills, DDPImageDownloaderDelegate>{
+@interface DDPPreloadVC : UIViewController<DDPCategoryDelegate, DDPMapDelegate, DDPUserDelegate, DDPImageDownloaderDelegate>{
     DDPImage *imageTool;
 }
 
