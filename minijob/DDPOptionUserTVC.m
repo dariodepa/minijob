@@ -336,4 +336,11 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)dealloc{
+    imagePickerController.delegate = nil;
+    photoLibraryController.delegate = nil;
+    imageTool.delegate = nil;
+    HUD.delegate = nil;
+}
+
 @end

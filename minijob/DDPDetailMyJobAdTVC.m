@@ -212,4 +212,9 @@
 
 - (IBAction)buttonSwitch:(id)sender {
 }
+
+- (void)dealloc{
+    changeJobAd.delegate = nil;
+    HUD.delegate = nil;
+}
 @end

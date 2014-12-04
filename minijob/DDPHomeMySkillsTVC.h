@@ -21,6 +21,7 @@
     DDPUser *mySkills;
     CLLocation *location;
     MBProgressHUD *hud;
+    DDPUser *user;
 }
 @property (strong, nonatomic) DDPApplicationContext *applicationContext;
 @property (assign, nonatomic) UIViewController *caller;

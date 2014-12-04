@@ -38,7 +38,6 @@
     }
     jobAd = [[DDPJobAd alloc] init];
     jobAd.delegate = self;
-    arrayJobAds = [[NSMutableArray alloc] init];
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self action:@selector(initialize) forControlEvents:UIControlEventValueChanged];
     //[self.tableView setContentOffset:CGPointMake(0, -self.refreshControl.frame.size.height) animated:YES];
@@ -53,10 +52,10 @@
     //[self.refreshControl beginRefreshing];
     [self initialize];
 }
+
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     self.applicationContext.visibleViewController = self;
-    //NSLog(@"..................................viewDidAppear %@", self.applicationContext.visibleViewController);
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
@@ -118,48 +117,72 @@
     } else if (arrayJobAds && arrayJobAds.count == 0) {
         NSLog(@"ONE ROW. NOPRODUCTS CELL.");
         return 0; // the NoProductsCell
+    } else {
+        return 1;
     }
     return 0;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 80;
+    return 100;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    PFObject *object = [arrayJobAds objectAtIndex:indexPath.row];
-    static NSString *CellIdentifier = @"CellJobAd";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
-                                      reuseIdentifier:CellIdentifier];
-    }
-    // Configure the cell to show todo item with a priority at the bottom
-    
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"dd-MM-yyyy"];
-    NSString *strDate = [dateFormatter stringFromDate:object.updatedAt];
-    NSLog(@"strDate %@", strDate);
+    if (!arrayJobAds) {
+        static NSString *CellIdentifier = @"CellLoading";
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                          reuseIdentifier:CellIdentifier];
+        }
+        return cell;
+    } else {
 
-    UILabel *labelDate = (UILabel *)[cell viewWithTag:11];
-    labelDate.text = strDate;
-    
-    UILabel *labelZone = (UILabel *)[cell viewWithTag:12];
-    labelZone.text = [object objectForKey:@"city"];
-    
-    UILabel *labelTitle = (UILabel *)[cell viewWithTag:13];
-    labelTitle.text = [object objectForKey:@"title"];
-    
-    PFObject *cat = object[@"categoryID"];
-    UILabel *labelCategory = (UILabel *)[cell viewWithTag:14];
-    labelCategory.text = [cat objectForKey:@"label"];
-    
- 
-    //cell.textLabel.text = [object objectForKey:@"title"];
-    //cell.detailTextLabel.text = [NSString stringWithFormat:@"Priority: %@",[object objectForKey:@"priority"]];
-    return cell;
+        PFObject *object = [arrayJobAds objectAtIndex:indexPath.row];
+        static NSString *CellIdentifier = @"CellJobAd";
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                          reuseIdentifier:CellIdentifier];
+        }
+        // Configure the cell to show todo item with a priority at the bottom
+        
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"dd-MM-yyyy"];
+        NSString *strDate = [dateFormatter stringFromDate:object.updatedAt];
+        NSLog(@"strDate %@", strDate);
+
+        UILabel *labelDate = (UILabel *)[cell viewWithTag:11];
+        labelDate.text = strDate;
+        
+        UILabel *labelZone = (UILabel *)[cell viewWithTag:12];
+        labelZone.text = [object objectForKey:@"city"];
+        
+        UILabel *labelTitle = (UILabel *)[cell viewWithTag:13];
+        labelTitle.text = [object objectForKey:@"title"];
+        
+        PFObject *cat = object[@"categoryID"];
+        UILabel *labelCategory = (UILabel *)[cell viewWithTag:14];
+        labelCategory.text = [[NSString alloc] initWithFormat:@"%@: %@",NSLocalizedString(@"CercoKey", nil),[cat objectForKey:@"label"]];
+        
+        UIImageView *imageState= (UIImageView *)[cell viewWithTag:16];
+        NSLog(@"state: %d",(int)[object[@"state"] integerValue]);
+        if([object[@"state"] integerValue]>0){
+            imageState.image = [UIImage imageNamed:@"unlock.png"];
+        }else{
+            imageState.image = [UIImage imageNamed:@"lock.png"];
+        }
+        
+        UILabel *labelMessage = (UILabel *)[cell viewWithTag:15];
+        labelMessage.text = [[NSString alloc] initWithFormat:@"%@",NSLocalizedString(@"HaiRicevutoXRisposteKey", nil)];
+
+     
+        //cell.textLabel.text = [object objectForKey:@"title"];
+        //cell.detailTextLabel.text = [NSString stringWithFormat:@"Priority: %@",[object objectForKey:@"priority"]];
+        return cell;
+    }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -210,6 +233,10 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)dealloc{
+    jobAd.delegate = nil;
 }
 
 @end

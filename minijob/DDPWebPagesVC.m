@@ -73,4 +73,7 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (void)dealloc{
+    self.webView.delegate = nil;
+}
 @end

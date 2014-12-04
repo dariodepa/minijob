@@ -74,7 +74,7 @@ UIAlertView *categoriesAlertView;
 // ************ 1 LOAD CATEGORIES **************
 -(void)loadCategories {
     [self.applicationContext removeObjectForKey:LAST_LOADED_CATEGORIES];
-    DDPCategory *categoryDC = [[DDPCategory alloc] init];
+    categoryDC = [[DDPCategory alloc] init];
     categoryDC.delegate = self;
     [categoryDC getAll];
 }
@@ -89,7 +89,7 @@ UIAlertView *categoriesAlertView;
 // ************ 2 LOAD POSITION MAP **************
 -(void)setCurrentLocation{
     [self.applicationContext removeObjectForKey:CURRENT_POSITION];
-    DDPMap *map = [[DDPMap alloc] init];
+    map = [[DDPMap alloc] init];
     map.delegate = self;
     [map getGeoPoint];
 }
@@ -104,7 +104,7 @@ UIAlertView *categoriesAlertView;
 // ************ 3 LOAD SETTING CITY NAME ****************
 -(void)setCurrentCity{
     [self.applicationContext removeObjectForKey:CURRENT_CITY];
-    DDPMap *map = [[DDPMap alloc] init];
+    map = [[DDPMap alloc] init];
     map.delegate = self;
     CLLocation *location = (CLLocation *)[self.applicationContext getVariable:CURRENT_POSITION];
     [map reverseGeocodeLocation:location];
@@ -120,7 +120,7 @@ UIAlertView *categoriesAlertView;
 // ************ 4 LOAD MY SKILLS ****************
 -(void)loadMySkills{
     NSLog(@"loadMySkills");
-    DDPUser *mySkills = [[DDPUser alloc] init];
+    mySkills = [[DDPUser alloc] init];
     mySkills.delegate = self;
     [mySkills loadSkills:[PFUser currentUser]];
 }
@@ -215,6 +215,13 @@ UIAlertView *categoriesAlertView;
     if (actionSheet == categoriesAlertView) {
         [self loadCategories];
     }
+}
+
+- (void)dealloc{
+    categoryDC.delegate = nil;
+    map.delegate = nil;
+    imageTool.delegate = nil;
+    mySkills.delegate = nil;
 }
 
 @end

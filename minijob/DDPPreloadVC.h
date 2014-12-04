@@ -15,6 +15,9 @@
 
 @interface DDPPreloadVC : UIViewController<DDPCategoryDelegate, DDPMapDelegate, DDPUserDelegate, DDPImageDownloaderDelegate>{
     DDPImage *imageTool;
+    DDPCategory *categoryDC;
+    DDPMap *map;
+    DDPUser *mySkills;
 }
 
 @property (strong, nonatomic) DDPApplicationContext *applicationContext;

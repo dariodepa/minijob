@@ -42,7 +42,7 @@
 //LOAD CATEGORIES
 //******************************************************//
 -(void)loadCategories {
-    DDPCategory *categoryDC = [[DDPCategory alloc] init];
+    categoryDC = [[DDPCategory alloc] init];
     categoryDC.delegate = self;
     //[categoryDC getCategoriesUnselected:self.arrayMySkills];
     [categoryDC getAll];
@@ -152,7 +152,7 @@
 -(void)addSkills:(PFObject *)object{
     //nwSkill = object;
     NSLog(@"indexOfObject: %lu, %@",(unsigned long)[arrayCategories indexOfObject:object], object);
-    DDPUser *user =[[DDPUser alloc]init];
+    user =[[DDPUser alloc]init];
     user.delegate=self;
     [user addSkillToProfile:object.objectId];
 }
@@ -182,4 +182,8 @@
     NSLog(@"responderCountAds:");
 }
 //******************************************************//
+- (void)dealloc{
+    categoryDC.delegate = nil;
+    user.delegate = nil;
+}
 @end

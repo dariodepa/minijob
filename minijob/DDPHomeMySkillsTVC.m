@@ -38,15 +38,13 @@
     myCategorySkills = [[NSMutableArray alloc] init];
     mySkills = [[DDPUser alloc] init];
     [self.toolBarAddSkill setAlpha:0.5];
-    //[self initialize];
+    [self initialize];
 }
 
 
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     self.applicationContext.visibleViewController = self;
-    [self initialize];
-     //NSLog(@"..................................viewDidAppear %@", self.applicationContext.visibleViewController);
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
@@ -92,6 +90,18 @@
 //DELEGATE loadSkills
 //+++++++++++++++++++++++++++++++++++++++//
 -(void)loadSkillsReturn:(NSArray *)objects{
+    
+    [arraySkills removeAllObjects];
+    for (PFObject *object in objects) {
+        PFObject *skill = object[@"categoryID"];
+        [arraySkills addObject:skill];
+    }
+    NSLog(@"arrayCategories %@", arraySkills);
+    self.applicationContext.mySkills = arraySkills;
+
+    
+    
+    
     arraySkills = [[NSMutableArray alloc] init];
     [arraySkills addObjectsFromArray:objects];
     self.applicationContext.mySkills = arraySkills;
@@ -214,7 +224,7 @@
         hud.mode = MBProgressHUDModeIndeterminate;
         hud.labelText = @"Uploading";
         [hud show:YES];
-        DDPUser *user =[[DDPUser alloc]init];
+        user =[[DDPUser alloc]init];
         user.delegate = self;
         [user removeSkillToProfileUsingId:skillID];
         [self removeRowFromTable];
@@ -295,6 +305,13 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+
+- (void)dealloc{
+    mySkills.delegate = nil;
+    user.delegate = nil;
+    //[super dealloc];
 }
 @end
 

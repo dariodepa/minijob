@@ -20,6 +20,8 @@
     PFObject *objectUserProfile;
     PFObject *userClassParse;
     NSString *facebookID;
+    UIImagePickerController *imagePicker;
+    DDPImage *imageLoader;
 }
 @property (strong, nonatomic) DDPApplicationContext *applicationContext;
 @property (weak, nonatomic) IBOutlet UILabel *welcomeLabel;

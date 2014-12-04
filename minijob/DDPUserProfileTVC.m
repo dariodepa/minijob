@@ -46,14 +46,13 @@
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     self.applicationContext.visibleViewController = self;
-    NSLog(@"..................................viewDidAppear %@", self.applicationContext.visibleViewController);
-    //[self initialize];
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     self.applicationContext.visibleViewController = nil;
 }
+
 
 -(void)initialize{
     //self.idProfile = @"QzQGFs4zsJ";
@@ -115,7 +114,6 @@
         NSLog(@"self.applicationContext.myImageProfile: %@",self.applicationContext.myImageProfile);
         [self loadImageProfile];
     }else{
-        
         CGSize newSize = CGSizeMake(280,280);
         [self setPhotoProfile:self.applicationContext.myImageProfile sizePhoto:newSize];
     }
@@ -126,7 +124,11 @@
     if(!self.applicationContext.mySkills){
         [user loadSkills:[PFUser currentUser]];
     }else{
-        [self loadSkillsReturn:self.applicationContext.mySkills];
+        if(!self.applicationContext.myNearMeNumAds){
+            [self countAdsMySkillsNearMe];
+        }
+        [self.toolBarAddSkill setAlpha:1];
+        [self.tableView reloadData];
     }
     //[user countSkills:[PFUser currentUser]];
     
@@ -151,10 +153,13 @@
 //+++++++++++++++++++++++++++++++++++++++//
 -(void)loadSkillsReturn:(NSArray *)objects{
     [arraySkills removeAllObjects];
-    [arraySkills addObjectsFromArray:objects];
-    if(!self.idProfile){
-        self.applicationContext.mySkills = arraySkills;
+    for (PFObject *object in objects) {
+        PFObject *skill = object[@"categoryID"];
+        [arraySkills addObject:skill];
     }
+    NSLog(@"arrayCategories %@", arraySkills);
+    self.applicationContext.mySkills = arraySkills;
+  
     NSLog(@"Successfully retrieved arraySkills %@", self.applicationContext.mySkills);
     if(!self.applicationContext.myNearMeNumAds){
         [self countAdsMySkillsNearMe];
@@ -167,10 +172,7 @@
 -(void)countAdsMySkillsNearMe {
     NSLog(@"loadAdsMySkillsNearMe AC:%@",self.applicationContext.mySkills);
     [arrayMySkills removeAllObjects];
-    for (PFObject *object in self.applicationContext.mySkills) {
-        PFObject *skill = object[@"categoryID"];
-        [arrayMySkills addObject:skill];
-    }
+    [arrayMySkills addObjectsFromArray:self.applicationContext.mySkills];
     NSLog(@"arrayMySkills %@", arrayMySkills);
     [jobAd countAdsMySkillsNearMe:self.userProfile[@"position"] skills:arrayMySkills radius:[self.userProfile[@"radius"] intValue]];
 }
@@ -312,8 +314,10 @@
     if(indexPath.section==1){
         CellIdentifier = @"cellSkills";
         PFObject *object = [arraySkills objectAtIndex:indexPath.row];
-        PFObject *cat = object[@"categoryID"];
-        label =[cat objectForKey:@"label"];
+        NSLog(@"object : %@",object);
+        
+        //PFObject *cat = object[@"categoryID"];
+        label =[object objectForKey:@"label"];
         
         cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         if (cell == nil) {
@@ -436,7 +440,6 @@
 {
     NSLog(@"returnToUserProfile:");
     [self initialize];
-    [self.tableView reloadData];
 }
 
 - (void)didReceiveMemoryWarning
@@ -445,8 +448,13 @@
     // Dispose of any resources that can be recreated.
 }
 
--(void)dealloc {
-    NSLog(@"PROFILE DEALLOCATING...");
+
+- (void)dealloc{
+    jobAd.delegate = nil;
+    user.delegate = nil;
+    HUD.delegate = nil;
+    imageTool.delegate = nil;
+    //[super dealloc];
 }
 
 @end

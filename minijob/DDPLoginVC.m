@@ -259,4 +259,9 @@ static NSString *SESSION_TOKEN = @"sessionToken";
     return [emailTest evaluateWithObject:candidate];
 }
 
+- (void)dealloc{
+    self.textPassword.delegate = nil;
+    self.textEmail.delegate = nil;
+}
+
 @end

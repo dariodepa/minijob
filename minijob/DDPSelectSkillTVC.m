@@ -195,4 +195,8 @@
 -(void)alertError:(NSString *)error{
     //ERROR
 }
+
+- (void)dealloc{
+    categoryDC.delegate = nil;
+}
 @end

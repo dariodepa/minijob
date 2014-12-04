@@ -175,16 +175,11 @@
     [query orderByDescending:@"updatedAt"];
     [query includeKey:@"categoryID"];
     query.cachePolicy = kPFCachePolicyIgnoreCache;
-    id visibleVC = self.delegate;
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             NSLog(@"Successfully retrieved %lu scores.", (unsigned long)objects.count);
             NSLog(@"^^^^^^^^^^^^^^^^^^^^^^");
-            NSLog(@"OK********** %@ - %@", self.applicationContext.visibleViewController , visibleVC);
-            if(self.applicationContext.visibleViewController == visibleVC){
-                [self.delegate loadSkillsReturn:objects];
-            }
-            
+            [self.delegate loadSkillsReturn:objects];
         } else {
             // Log details of the failure
             NSLog(@"Error: %@ %@", error, [error userInfo]);

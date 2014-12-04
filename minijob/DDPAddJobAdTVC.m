@@ -134,4 +134,9 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+- (void)dealloc{
+    nwJobAd.delegate = nil;
+    HUD.delegate = nil;
+}
 @end

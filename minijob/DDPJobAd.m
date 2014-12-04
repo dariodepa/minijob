@@ -7,10 +7,20 @@
 //
 
 #import "DDPJobAd.h"
-
+#import "DDPAppDelegate.h"
+#import "DDPApplicationContext.h"
 
 @implementation DDPJobAd
 
+- (id)init {
+    if (self = [super init]) {
+        if(!self.applicationContext){
+            DDPAppDelegate *appDelegate = (DDPAppDelegate *)[[UIApplication sharedApplication] delegate];
+            self.applicationContext = appDelegate.applicationContext;
+        }
+    }
+    return self;
+}
 
 -(void)saveJobAd:(DDPJobAd *)jobAdtoSave
 {
@@ -75,7 +85,6 @@
         if (!error) {
             // The find succeeded.
             NSLog(@"Successfully retrieved %d scores.", (int)objects.count);
-            // Do something with the found objects
             [self.delegate jobAdsLoaded:objects];
         } else {
             // Log details of the failure

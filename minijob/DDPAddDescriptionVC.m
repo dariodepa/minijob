@@ -199,4 +199,8 @@
         [self performSegueWithIdentifier:@"toAddJobAdTVC" sender:self];
     }
 }
+
+- (void)dealloc{
+    self.descriptionTextView.delegate = nil;
+}
 @end

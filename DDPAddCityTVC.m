@@ -256,4 +256,8 @@
     }
 }
 
+
+- (void)dealloc{
+    self.mapController.delegate = nil;
+}
 @end

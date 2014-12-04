@@ -224,4 +224,8 @@
     [self performSegueWithIdentifier:@"returnToOptionUser" sender:self];
 }
 
+- (void)dealloc{
+    self.mapController.delegate = nil;
+}
+
 @end

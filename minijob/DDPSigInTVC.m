@@ -245,4 +245,11 @@ MBProgressHUD *hud;
     NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegex];
     return [emailTest evaluateWithObject:candidate];
 }
+
+- (void)dealloc{
+    self.textSurname.delegate = nil;
+    self.textName.delegate = nil;
+    self.textPassword.delegate = nil;
+    self.textEmail.delegate = nil;
+}
 @end

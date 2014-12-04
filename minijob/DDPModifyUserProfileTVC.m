@@ -196,4 +196,11 @@
     self.user.radius = [NSNumber numberWithFloat:val];
     
 }
+
+- (void)dealloc{
+    self.nameValue.delegate = nil;
+    self.surnameValue.delegate = nil;
+    self.emailValue.delegate = nil;
+    self.telephoneValue.delegate = nil;
+}
 @end

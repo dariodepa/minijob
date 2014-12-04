@@ -16,12 +16,13 @@
 @end
 
 
-
+@class DDPApplicationContext;
 @class DDPCategory;
 @class DDPCity;
 
 @interface DDPJobAd : NSObject
 
+@property (strong, nonatomic) DDPApplicationContext *applicationContext;
 @property (nonatomic, assign) id <DDPJobAdDelegate> delegate;
 @property (strong, nonatomic) NSString *title;
 @property (strong, nonatomic) NSString *textDescription;

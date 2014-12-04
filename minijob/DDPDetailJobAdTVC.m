@@ -35,8 +35,8 @@
     imageTool = [[DDPImage alloc] init];
     imageTool.delegate = self;
     
-    chatDC = [[DDPChat alloc] init];
-    chatDC.delegate = self;
+//    chatDC = [[DDPChat alloc] init];
+//    chatDC.delegate = self;
     
     responseLoadChatRoom = NO;
     self.chatData = [[NSMutableArray alloc]init];
@@ -324,5 +324,10 @@
 
 
 - (IBAction)buttonSwitch:(id)sender {
+}
+
+- (void)dealloc{
+    imageTool.delegate = nil;
+    HUD.delegate = nil;
 }
 @end

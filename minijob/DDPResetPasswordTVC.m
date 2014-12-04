@@ -137,5 +137,8 @@
     return [emailTest evaluateWithObject:candidate];
 }
 
+- (void)dealloc{
+    self.textEmail.delegate = nil;
+}
 
 @end

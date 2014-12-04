@@ -123,7 +123,7 @@ float BUBBLE_MARGIN_BOTTOM = 7.5;
 
 
 - (void)reloadTableViewDataSource{
-    NSLog(@"------------------> reloadTableViewDataSource %hhd %hhd",reloading, keyboardShow);
+    //NSLog(@"------------------> reloadTableViewDataSource %hhd %hhd",reloading, keyboardShow);
 	if(reloading == NO && keyboardShow == NO){
         [self loadLocalChat];
     }
@@ -268,7 +268,7 @@ float BUBBLE_MARGIN_BOTTOM = 7.5;
         NSDictionary *dictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
         [self.chatData addObject:dictionary];
         //NSLog(@"chatData %@",chatData);
-        int nRows = [self.tableView numberOfRowsInSection:0];
+        int nRows = (int)[self.tableView numberOfRowsInSection:0];
         
         
         NSIndexPath *newPath = [NSIndexPath indexPathForRow:nRows inSection:0];
@@ -350,7 +350,7 @@ float BUBBLE_MARGIN_BOTTOM = 7.5;
     if([objects count]>0){
          NSMutableArray *arrayChatData = [[NSMutableArray alloc]init];
         [arrayChatData addObjectsFromArray:[[objects reverseObjectEnumerator] allObjects]];
-        int limitMsgChat = [objects count];
+        int limitMsgChat = (int)[objects count];
         if(limitMsgChat>20)limitMsgChat = 20;
         localCacheChat = [arrayChatData subarrayWithRange:NSMakeRange(0, limitMsgChat)];
        // NSMutableArray *arrayChatData = [NSMutableArray arrayWithArray:[self addObjectsToArray:objects]];
@@ -404,7 +404,7 @@ float BUBBLE_MARGIN_BOTTOM = 7.5;
 }
 
 - (NSInteger)tableView:(UITableView *)_tableView numberOfRowsInSection:(NSInteger)section {
-   NSLog(@"************* numberOfRowsInSection: %d",[self.chatData count]+1);
+  // NSLog(@"************* numberOfRowsInSection: %d",[self.chatData count]+1);
 //    if([self.cacheChat count]>0){
 //        return [self.chatData count]+1;
 //    }
@@ -418,7 +418,7 @@ float BUBBLE_MARGIN_BOTTOM = 7.5;
     }else if(indexPath.row==0){
         return 0;
     }else{
-        int indexRow = (indexPath.row-1);
+        int indexRow = (int)(indexPath.row-1);
         PFObject *object = [self.chatData objectAtIndex:indexRow];
         NSLog(@"************* heightForRowAtIndexPath:");
         NSLog(@"****DATE ++++++++++: %@",object[@"date"]);
@@ -460,7 +460,7 @@ float BUBBLE_MARGIN_BOTTOM = 7.5;
 
 - (UITableViewCell *)tableView:(UITableView *)__tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"row: %d - count: %d", indexPath.row, [self.chatData count]);
+    //NSLog(@"row: %d - count: %d", indexPath.row, [self.chatData count]);
     PFObject *object;
     PFObject *userChat;
     NSString *userId;
@@ -511,7 +511,7 @@ float BUBBLE_MARGIN_BOTTOM = 7.5;
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
         NSString *dateChat;
         NSDate *today = [NSDate date];
-        int days = [DDPCommons daysBetweenDate:object[@"date"] andDate:today];
+        int days = (int)[DDPCommons daysBetweenDate:object[@"date"] andDate:today];
         if(days==0){
            dateChat = NSLocalizedString(@"oggi", nil);
         }

@@ -252,7 +252,7 @@
     // Check for camera
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera] == YES) {
         // Create image picker controller
-        UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+        imagePicker = [[UIImagePickerController alloc] init];
         
         // Set source to the camera
         imagePicker.sourceType =  UIImagePickerControllerSourceTypeCamera;
@@ -311,7 +311,7 @@
     NSData *imageData = UIImageJPEGRepresentation(smallImage, 0.05f);
     PFImageView *imageView = [[PFImageView alloc] init];
     imageView.file = (PFFile *)[PFFile fileWithName:@"imageProfile" data:imageData];
-    DDPImage *imageLoader = [[DDPImage alloc]init];
+    imageLoader = [[DDPImage alloc]init];
     imageLoader.delegate = self;
     [imageLoader loadImage:imageView.file];
 }
@@ -338,5 +338,15 @@
     NSString *sessionToken = [[NSUserDefaults standardUserDefaults] objectForKey:@"sessionToken"];
     NSLog(@"initialize current user : %@", sessionToken);
     [self performSegueWithIdentifier:@"goToStart" sender:self];
+}
+
+
+- (void)dealloc{
+    imageTool.delegate = nil;
+    HUD.delegate = nil;
+    imagePicker.delegate = nil;
+    self.imagePickerController.delegate = nil;
+    self.photoLibraryController.delegate = nil;
+    imageLoader.delegate = nil;
 }
 @end

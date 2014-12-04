@@ -65,7 +65,6 @@
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     self.applicationContext.visibleViewController = self;
-    //NSLog(@"..................................viewDidAppear %@", self.applicationContext.visibleViewController);
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
@@ -76,29 +75,33 @@
 -(void)initialize{
     [DDPCommons customizeTitle:self.navigationItem];
     [self setMapPosition];
-    //[self loadMyPosition];
-    //[self loadMyRadius];
-    //[self loadMyCity];
     self.labelHeader.text = [[NSString alloc] initWithFormat:@"%@ %dKm %@\n %@",NSLocalizedString(@"Annunci Nel Raggio Di LKey", nil),radius,NSLocalizedString(@"da:", nil),cityName];
     [self loadMySkills];
 }
 
 -(void)setMapPosition{
-    location = [[CLLocation alloc] initWithLatitude:40.1783288 longitude:18.1806903];
     if([[PFUser currentUser] valueForKey:@"position"]){
         NSLog(@"city: %@",[[PFUser currentUser] valueForKey:@"city"]);
         PFGeoPoint *position = (PFGeoPoint *)[[PFUser currentUser] valueForKey:@"position"];
+        self.mapController.latitude = position.latitude;
+        self.mapController.longitude = position.longitude;
         location = [[CLLocation alloc] initWithLatitude:position.latitude longitude:position.longitude];
         cityName = [[PFUser currentUser] valueForKey:@"city"];
+        self.mapView = [self.mapController addPointAnnotation:self.mapView location:location];
+        //self.toolBar.hidden = NO;
     }else if([self.applicationContext getVariable:CURRENT_POSITION]){
-        location = (CLLocation *)[self.applicationContext getVariable:CURRENT_POSITION];
+        CLLocation *position = (CLLocation *)[self.applicationContext getVariable:CURRENT_POSITION];
+        self.mapController.latitude = position.coordinate.latitude;
+        self.mapController.longitude = position.coordinate.longitude;
         cityName = (NSString *)[self.applicationContext getVariable:CURRENT_CITY];
+        self.mapView = [self.mapController addPointAnnotation:self.mapView location:position];
+        //self.toolBar.hidden = NO;
+    }else{
+        self.mapController.latitude = 40.1783288;
+        self.mapController.longitude = 18.1806903;
     }
-    self.mapView = [self.mapController addPointAnnotation:self.mapView location:location];
-    
     radius = [[[PFUser currentUser] objectForKey:@"radius"] floatValue];
     float radiusMt = [DDPCommons convertKmToMeters:radius];
-    //NSLog(@"radius: %f",radius);
     MKCircle *circle = [MKCircle circleWithCenterCoordinate:location.coordinate radius:radiusMt];
     [self.mapView addOverlay:circle level:MKOverlayLevelAboveRoads];
     self.mapView.visibleMapRect = [self.mapView mapRectThatFits:circle.boundingMapRect];
@@ -116,48 +119,26 @@
     return nil;
 }
 
+-(void)loadMySkills{
+    NSLog(@"loadMySkills %@", self.applicationContext.mySkills);
+    if(!self.applicationContext.mySkills || self.applicationContext.mySkills.count==0){
+        self.applicationContext.mySkills = [[NSMutableArray alloc]init];
+        [userProfile loadSkills:[PFUser currentUser]];
+    }else if(self.applicationContext.mySkills.count>0){
+        [self loadAdsMySkillsNearMe];
+    }
+}
+
 -(void)loadAdsMySkillsNearMe {
-    NSLog(@"loadAdsMySkillsNearMe AC:%@",self.applicationContext.mySkills);
     jobAd.delegate = self;
     PFGeoPoint *point = [PFGeoPoint geoPointWithLatitude:location.coordinate.latitude longitude:location.coordinate.longitude];
-    //NSString *myCity = self.applicationContext.myCity;
-    [jobAd loadAdsMySkillsNearMe:point skills:arraySkills radius:radius];
+    [jobAd loadAdsMySkillsNearMe:point skills:self.applicationContext.mySkills radius:radius];
 }
-
--(void)loadMySkills{
-    if(!self.applicationContext.mySkills){
-        self.applicationContext.mySkills = [[NSMutableArray alloc]init];
-    }
-    [userProfile loadSkills:[PFUser currentUser]];
-}
-
-//-(void)loadMyRadius{
-//    PFUser *user = [PFUser currentUser];
-//    if(user[@"radius"]){
-//        radius=[user[@"radius"] floatValue];
-//    }else{
-//        radius = [[self.applicationContext.constantsPlist objectForKey:@"RADIUS_POINT"] floatValue];
-//    }
-//    NSLog(@"radius %f",radius);
-//}
-
-//-(void)loadMyPosition{
-//    if(!self.applicationContext.myPosition){
-//        [self.applicationContext setMyPosition];
-//    }
-//    NSLog(@"loadMyPosition %@",self.applicationContext.myPosition);
-//}
-
-//-(void)loadMyCity{
-//    if(!self.applicationContext.myCity){
-//        [self.applicationContext setMyCity];
-//    }
-//    NSLog(@"loadMyCity %@",self.applicationContext.myCity);
-//}
 
 //DELEGATE DDPUserDelegate
 //----------------------------------------//
 -(void)loadSkillsReturn:(NSArray *)objects{
+    [arraySkills removeAllObjects];
     for (PFObject *object in objects) {
         PFObject *skill = object[@"categoryID"];
         [arraySkills addObject:skill];
@@ -222,6 +203,8 @@
     } else if (arrayJobAds && arrayJobAds.count == 0) {
         NSLog(@"ONE ROW. NOPRODUCTS CELL.");
         return 0; // the NoProductsCell
+    } else {
+        return 1;
     }
     return 0;
 }
@@ -234,46 +217,58 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath// object:(PFObject *)object
 {
     
-    PFObject *object = [arrayJobAds objectAtIndex:indexPath.row];
-    NSLog(@"OBJECT %@",object);
-    static NSString *CellIdentifier = @"CellJobAd";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
-                                      reuseIdentifier:CellIdentifier];
+    if (!arrayJobAds) {
+        static NSString *CellIdentifier = @"CellLoading";
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                          reuseIdentifier:CellIdentifier];
+        }
+        return cell;
+    } else {
+        PFObject *object = [arrayJobAds objectAtIndex:indexPath.row];
+        NSLog(@"OBJECT %@",object);
+        
+        static NSString *CellIdentifier = @"CellJobAd";
+        
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                          reuseIdentifier:CellIdentifier];
+        }
+        // Configure the cell to show todo item with a priority at the bottom
+        
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"dd-MM-yyyy"];
+        NSString *strDate = [dateFormatter stringFromDate:object.updatedAt];
+        NSLog(@"%@", strDate);
+        
+        UILabel *labelDate = (UILabel *)[cell viewWithTag:11];
+        labelDate.text = strDate;
+        
+        UILabel *labelZone = (UILabel *)[cell viewWithTag:12];
+        labelZone.text = [object objectForKey:@"city"];
+        
+        UILabel *labelTitle = (UILabel *)[cell viewWithTag:13];
+        labelTitle.text = [object objectForKey:@"title"];
+        
+        PFObject *cat = object[@"categoryID"];
+        UILabel *labelCategory = (UILabel *)[cell viewWithTag:14];
+        labelCategory.text = [cat objectForKey:@"label"];
+        
+        UIImageView *imageState= (UIImageView *)[cell viewWithTag:16];
+        NSLog(@"state: %d",(int)[object[@"state"] integerValue]);
+        if([object[@"state"] integerValue]>0){
+            imageState.image = [UIImage imageNamed:@"unlock.png"];
+        }else{
+            imageState.image = [UIImage imageNamed:@"lock.png"];
+        }
+        
+        UILabel *labelMessage = (UILabel *)[cell viewWithTag:15];
+        labelMessage.text = [[NSString alloc] initWithFormat:@"%@",NSLocalizedString(@"HaiRicevutoXRisposteKey", nil)];
+         return cell;
     }
-    // Configure the cell to show todo item with a priority at the bottom
-    
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"dd-MM-yyyy"];
-    NSString *strDate = [dateFormatter stringFromDate:object.updatedAt];
-    NSLog(@"%@", strDate);
-    
-    UILabel *labelDate = (UILabel *)[cell viewWithTag:11];
-    labelDate.text = strDate;
-    
-    UILabel *labelZone = (UILabel *)[cell viewWithTag:12];
-    labelZone.text = [object objectForKey:@"city"];
-    
-    UILabel *labelTitle = (UILabel *)[cell viewWithTag:13];
-    labelTitle.text = [object objectForKey:@"title"];
-    
-    PFObject *cat = object[@"categoryID"];
-    UILabel *labelCategory = (UILabel *)[cell viewWithTag:14];
-    labelCategory.text = [cat objectForKey:@"label"];
-    
-    UIImageView *imageState= (UIImageView *)[cell viewWithTag:16];
-    NSLog(@"state: %d",(int)[object[@"state"] integerValue]);
-    if([object[@"state"] integerValue]>0){
-        imageState.image = [UIImage imageNamed:@"unlock.png"];
-    }else{
-        imageState.image = [UIImage imageNamed:@"lock.png"];
-    }
-    
-    UILabel *labelMessage = (UILabel *)[cell viewWithTag:15];
-    labelMessage.text = [[NSString alloc] initWithFormat:@"%@",NSLocalizedString(@"HaiRicevutoXRisposteKey", nil)];
-    return cell;
-
+   
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -296,5 +291,13 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)dealloc{
+    jobAd.delegate = nil;
+    userProfile.delegate = nil;
+    self.mapController.delegate = nil;
+    self.mapView.delegate = nil;
+    //[super dealloc];
 }
 @end
